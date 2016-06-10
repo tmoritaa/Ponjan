@@ -24,6 +24,11 @@ public class Game {
     private Queue<UIResponseRequest> uiResponseRequests = new Queue<UIResponseRequest>();
     private Queue<UIUpdateRequest> uiUpdateRequests = new Queue<UIUpdateRequest>();
 
+    private DeckZone deck = new DeckZone();
+    public DeckZone Deck {
+        get { return this.deck; }
+    }
+
     public void EnqueueDecision(Decision decision) {
         this.decisionsToProcess.Enqueue(decision);
     }
@@ -56,46 +61,37 @@ public class Game {
         CombatSceneController.Instance.RequestResponses(this.uiResponseRequests);
     }
 
-    public void Initialize(Player.PlayerType[] playerTypes, string[] names) {
+    public void Initialize(Player.PlayerType[] playerTypes, string[] names, List<TileSetupData.TileSetupEntry> tileSetupEntries) {
         // Assuming there's only two players.
         for (int i = 0; i < playerTypes.Length; ++i) {
             Player player = new Player(playerTypes[i], i, names[i]);
             this.players.Add(player);
         }
 
-        /*
-        PhaseNode gameStartPhase = new GameStartPhase();
-        PhaseNode beginTurnPhase = new BeginTurnPhase();
-        PhaseNode drawPhase = new DrawPhase();
-        PhaseNode gainMaterialPhase = new GainMaterialPhase();
-        PhaseNode movementPhase = new MovementPhase();
-        PhaseNode playPhase = new PlayPhase();
-        PhaseNode abilityPhase = new AbilityPhase();
-        PhaseNode attackCyclePhase = new AttackCyclePhase();
-        PhaseNode discardPhase = new DiscardPhase();
-        PhaseNode endTurnPhase = new EndTurnPhase();
+        foreach(TileSetupData.TileSetupEntry setupEntry in tileSetupEntries) {
+            for(int i = 0; i < setupEntry.numberInDeck; ++i) {
+                Tile tile = new Tile(setupEntry.type, setupEntry.id);
+                this.deck.AddTile(tile);
+            }
+        }
 
-        gameStartPhase.Next = beginTurnPhase;
-        beginTurnPhase.Next = drawPhase;
-        drawPhase.Next = gainMaterialPhase;
-        gainMaterialPhase.Next = movementPhase;
-        movementPhase.Next = playPhase;
-        playPhase.Next = abilityPhase;
-        abilityPhase.Next = attackCyclePhase;
-        attackCyclePhase.Next = discardPhase;
-        discardPhase.Next = endTurnPhase;
-        endTurnPhase.Next = beginTurnPhase;
-        
+        PhaseNode gameStartPhase = new GameStartPhase();
+        PhaseNode drawPhase = new DrawPhase();
+        PhaseNode completeHandPhase = new CompleteHandPhase();
+        PhaseNode discardPhase = new DiscardPhase();
+        PhaseNode changeActivePlayerPhase = new ChangeActivePlayerPhase();
+
+        gameStartPhase.Next = drawPhase;
+        drawPhase.Next = completeHandPhase;
+        completeHandPhase.Next = discardPhase;
+        discardPhase.Next = changeActivePlayerPhase;
+        changeActivePlayerPhase.Next = drawPhase;
+
         this.phaseNodes[gameStartPhase.PhaseId] = gameStartPhase;
-        this.phaseNodes[beginTurnPhase.PhaseId] = beginTurnPhase;
         this.phaseNodes[drawPhase.PhaseId] = drawPhase;
-        this.phaseNodes[gainMaterialPhase.PhaseId] = gainMaterialPhase;
-        this.phaseNodes[movementPhase.PhaseId] = movementPhase;
-        this.phaseNodes[playPhase.PhaseId] = playPhase;
-        this.phaseNodes[abilityPhase.PhaseId] = abilityPhase;
-        this.phaseNodes[attackCyclePhase.PhaseId] = attackCyclePhase;
+        this.phaseNodes[completeHandPhase.PhaseId] = completeHandPhase;
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
-        this.phaseNodes[endTurnPhase.PhaseId] = endTurnPhase;*/
+        this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;
     }
 
     public void Start() {
@@ -142,6 +138,7 @@ public class Game {
             if (!phaseStillProc) {
                 this.curPhase = this.curPhase.Next;
                 this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
+                // TODO: Request frontend to update.
             }
         }
 

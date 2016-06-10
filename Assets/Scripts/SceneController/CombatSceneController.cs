@@ -16,12 +16,15 @@ public class CombatSceneController : MonoBehaviour {
         get { return CombatSceneController.instance; }
     }
 
+    [SerializeField]
+    private TileSetupData tileSetupData;
+
 	// Use this for initialization
     // TODO: should be Awake. Only because we need CardInfoManager to be initialized first, which will always be true once it gets moved to other scene.
 	void Start () {
         CombatSceneController.instance = this;
 
-        this.game.Initialize(new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred" });
+        this.game.Initialize(new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred" }, tileSetupData.TileSetups);
 
         this.game.Start();
 	}

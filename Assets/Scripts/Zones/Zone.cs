@@ -7,7 +7,6 @@ public abstract class Zone {
     public enum ZoneType {
         Hand,
         Deck,
-        Gameboard,
         Discard,
     }
 
@@ -25,16 +24,16 @@ public abstract class Zone {
         this.type = type;
     }
 
-    public virtual void AddCard(Tile tile) {
+    public virtual void AddTile(Tile tile) {
         if (tile.Zone != null) {
-            tile.Zone.RemoveCard(tile);
+            tile.Zone.RemoveTile(tile);
         }
 
         tile.Zone = this;
         this.tiles.Add(tile);
     }
 
-    public virtual void RemoveCard(Tile tile) {
+    public virtual void RemoveTile(Tile tile) {
         this.tiles.Remove(tile);
         tile.Zone = null;
     }

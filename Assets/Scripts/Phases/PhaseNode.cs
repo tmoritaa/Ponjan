@@ -6,15 +6,10 @@ using System.Linq;
 public abstract class PhaseNode {
     public enum PhaseID {
         StartGame,
-        BeginTurn,
         Draw,
-        GainMaterial,
-        Movement,
-        Play,
-        Ability,
-        AttackCycle,
+        CompleteHand,
         Discard,
-        EndTurn,
+        ChangeActivePlayer,
     };
     
     protected PhaseID phaseId;
@@ -28,14 +23,8 @@ public abstract class PhaseNode {
         get { return this.next; }
     }
 
-    protected string name;
-    public string Name {
-        get { return this.name; }
-    }
-
-    public PhaseNode(PhaseID id, string name) {
+    public PhaseNode(PhaseID id) {
         this.phaseId = id;
-        this.name = name;
     }
 
     public abstract IEnumerator PerformPhase(Game game);

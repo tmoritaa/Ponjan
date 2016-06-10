@@ -24,15 +24,6 @@ public class Game {
     private Queue<UIResponseRequest> uiResponseRequests = new Queue<UIResponseRequest>();
     private Queue<UIUpdateRequest> uiUpdateRequests = new Queue<UIUpdateRequest>();
 
-    private GameBoard board;
-    public GameBoard Board {
-        get { return this.board; }
-    }
-
-    public string GetCurrentPhaseText() {
-        return this.curPhase.Name;
-    }
-
     public void EnqueueDecision(Decision decision) {
         this.decisionsToProcess.Enqueue(decision);
     }
@@ -66,16 +57,13 @@ public class Game {
     }
 
     public void Initialize(Player.PlayerType[] playerTypes, string[] names) {
-        // TODO: temporary. Should really be grabbed from PlayerManager or something.
-        DeckRecipe deckRecipe = new DeckRecipe(new List<DeckRecipe.DeckEntry>(new DeckRecipe.DeckEntry[] { new DeckRecipe.DeckEntry(CardInfoManager.Instance.GetCardInfo("TestCard1"), 10), new DeckRecipe.DeckEntry(CardInfoManager.Instance.GetCardInfo("TestSkill"), 10) }));
         // Assuming there's only two players.
         for (int i = 0; i < playerTypes.Length; ++i) {
-            Player player = new Player(playerTypes[i], i, names[i], deckRecipe);
+            Player player = new Player(playerTypes[i], i, names[i]);
             this.players.Add(player);
         }
 
-        this.board = new GameBoard(CombatSceneController.Instance.BoardDimension);
-
+        /*
         PhaseNode gameStartPhase = new GameStartPhase();
         PhaseNode beginTurnPhase = new BeginTurnPhase();
         PhaseNode drawPhase = new DrawPhase();
@@ -107,7 +95,7 @@ public class Game {
         this.phaseNodes[abilityPhase.PhaseId] = abilityPhase;
         this.phaseNodes[attackCyclePhase.PhaseId] = attackCyclePhase;
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
-        this.phaseNodes[endTurnPhase.PhaseId] = endTurnPhase;
+        this.phaseNodes[endTurnPhase.PhaseId] = endTurnPhase;*/
     }
 
     public void Start() {

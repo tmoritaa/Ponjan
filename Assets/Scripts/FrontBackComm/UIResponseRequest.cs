@@ -6,8 +6,6 @@ using System.Text;
 public class UIResponseRequest {
     public enum ResponseType {
         None,
-        PlayPhaseAction,
-        PickZone,
     };
 
     public ResponseType requestType = ResponseType.None;

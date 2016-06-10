@@ -16,26 +16,26 @@ public abstract class Zone {
         get { return this.type; }
     }
 
-    protected List<Card> cards = new List<Card>();
-    public List<Card> Cards {
-        get { return this.cards; }
+    protected List<Tile> tiles = new List<Tile>();
+    public List<Tile> Tiles {
+        get { return this.tiles; }
     }
 
     public Zone(ZoneType type) {
         this.type = type;
     }
 
-    public virtual void AddCard(Card card) {
-        if (card.Zone != null) {
-            card.Zone.RemoveCard(card);
+    public virtual void AddCard(Tile tile) {
+        if (tile.Zone != null) {
+            tile.Zone.RemoveCard(tile);
         }
-        
-        card.Zone = this;
-        this.cards.Add(card);
+
+        tile.Zone = this;
+        this.tiles.Add(tile);
     }
 
-    public virtual void RemoveCard(Card card) {
-        this.cards.Remove(card);
-        card.Zone = null;
+    public virtual void RemoveCard(Tile tile) {
+        this.tiles.Remove(tile);
+        tile.Zone = null;
     }
 }

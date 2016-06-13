@@ -42,4 +42,8 @@ public class TileGO : MonoBehaviour {
 
         this.text.text = this.tile.Id.ToString();
     }
+
+    public void ButtonPressed() {
+        CombatSceneController.Instance.TilePressed(this.tile);
+    }
 }

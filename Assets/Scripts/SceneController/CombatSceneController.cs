@@ -19,6 +19,12 @@ public class CombatSceneController : MonoBehaviour {
     [SerializeField]
     public const int MaxPlayerHandSize = 9;
 
+    [HideInInspector]
+    public int MaxDeckSize = 0;
+
+    [HideInInspector]
+    public int PlayerSize = 0;
+
     [SerializeField]
     private TileSetupData tileSetupData;
 
@@ -95,9 +101,23 @@ public class CombatSceneController : MonoBehaviour {
 
         List<Player> players = this.game.Players;
 
+        this.PlayerSize = this.game.Players.Count;
+
+        foreach(TileSetupData.TileSetupEntry entry in this.tileSetupData.TileSetups) {
+            this.MaxDeckSize += entry.numberInDeck;
+        }
+
         // Number of players and player zones in list must be the same.
         for (int i = 0; i < this.playerZones.Count; ++i) {
             this.playerZones[i].Initialize(players[i]);
+        }
+    }
+
+    public void TilePressed(Tile tile) {
+        bool handled = this.game.HandleUIResponse(tile);
+
+        if (handled) {
+            this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
         }
     }
 }

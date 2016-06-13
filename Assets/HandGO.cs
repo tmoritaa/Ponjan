@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class HandGO : MonoBehaviour {
     List<TileGO> hand = new List<TileGO>();
+
 	public void Initialize() {
         int maxHandSize = CombatSceneController.MaxPlayerHandSize;
 
@@ -16,8 +17,7 @@ public class HandGO : MonoBehaviour {
             TileGO tile = GameObject.Instantiate(tilePrefab);
             tile.transform.SetParent(this.transform, false);
 
-            Vector3 pos = new Vector2((i - midIdx) * imageWidth, 0);
-            tile.transform.localPosition = pos;
+            tile.transform.localPosition = new Vector2((i - midIdx) * imageWidth, 0);
             this.hand.Add(tile);
         }
     }

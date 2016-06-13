@@ -13,11 +13,11 @@ public class DiscardGO : MonoBehaviour {
         float imageWidth = tilePrefab.Image.rectTransform.rect.width;
         for(int i = 0; i < maxDiscardSize; ++i) {
             TileGO tileGO = GameObject.Instantiate(tilePrefab);
-            tileGO.transform.SetParent(this.transform, false);
             RectTransform rectTrans = tileGO.GetComponent<RectTransform>();
             rectTrans.anchorMin = new Vector2(0, rectTrans.anchorMin.y);
             rectTrans.anchorMax = new Vector2(0, rectTrans.anchorMax.y);
             rectTrans.localPosition = new Vector2(imageWidth / 2 + i * imageWidth, 0);
+            tileGO.transform.SetParent(this.transform, false);
             discard.Add(tileGO);
         }
     }

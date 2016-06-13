@@ -36,8 +36,14 @@ public class Player {
     }
 
     private HandZone handZone = new HandZone();
+    public HandZone HandZone {
+        get { return this.handZone; }
+    }
 
     private DiscardZone discardzone = new DiscardZone();
+    public DiscardZone DiscardZone {
+        get { return this.discardzone; }
+    }
 
     public Player(PlayerType pType, int id, string name) {
         this.controllerType = pType;

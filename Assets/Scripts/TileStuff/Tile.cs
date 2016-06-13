@@ -11,10 +11,17 @@ public class Tile {
         Yellow,
         Red,
         White,
+        Dragon,
     }
     private TileType type;
+    public TileType Type {
+        get { return this.type; }
+    }
 
     private int id;
+    public int Id {
+        get { return this.id; }
+    }
 
     private Player owner;
     public Player Owner {

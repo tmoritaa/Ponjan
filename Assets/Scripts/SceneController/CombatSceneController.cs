@@ -17,14 +17,25 @@ public class CombatSceneController : MonoBehaviour {
     }
 
     [SerializeField]
+    public const int MaxPlayerHandSize = 9;
+
+    [SerializeField]
     private TileSetupData tileSetupData;
 
-	// Use this for initialization
-    // TODO: should be Awake. Only because we need CardInfoManager to be initialized first, which will always be true once it gets moved to other scene.
-	void Start () {
+    [SerializeField]
+    private TileGO tilePrefab;
+    public TileGO TilePrefab {
+        get { return this.tilePrefab; }
+    }
+
+    // Must be in order of S, E, N, W.
+    [SerializeField]
+    List<PlayerZoneGO> playerZones;
+
+	void Awake() {
         CombatSceneController.instance = this;
 
-        this.game.Initialize(new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred" }, tileSetupData.TileSetups);
+        this.Initialize();
 
         this.game.Start();
 	}
@@ -60,6 +71,9 @@ public class CombatSceneController : MonoBehaviour {
             switch (request.requestType) {
                 case UIUpdateRequest.UpdateType.None:
                     break;
+                case UIUpdateRequest.UpdateType.UpdateBoard:
+                    this.playerZones.ForEach(z => z.UpdateZones());
+                    break;
             }
         }
     }
@@ -73,6 +87,17 @@ public class CombatSceneController : MonoBehaviour {
                 case UIResponseRequest.ResponseType.None:
                     break;
             }
+        }
+    }
+
+    private void Initialize() {
+        this.game.Initialize(new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred", "Dred" }, tileSetupData.TileSetups);
+
+        List<Player> players = this.game.Players;
+
+        // Number of players and player zones in list must be the same.
+        for (int i = 0; i < this.playerZones.Count; ++i) {
+            this.playerZones[i].Initialize(players[i]);
         }
     }
 }

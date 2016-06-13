@@ -6,6 +6,7 @@ using System.Text;
 public class UIUpdateRequest {
     public enum UpdateType {
         None,
+        UpdateBoard,
     }
 
     public UpdateType requestType = UpdateType.None;

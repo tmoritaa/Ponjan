@@ -139,6 +139,8 @@ public class Game {
                 this.curPhase = this.curPhase.Next;
                 this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
                 // TODO: Request frontend to update.
+                this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.UpdateBoard));
+                yield return 0;
             }
         }
 

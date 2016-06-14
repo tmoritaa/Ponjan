@@ -15,6 +15,8 @@ public class DiscardCommand : Command {
 
     public override IEnumerator PerformCommand(Game game) {
         this.player.DiscardFromHand(this.tile);
+        this.player.SortHand();
+
         yield break;
     }
 

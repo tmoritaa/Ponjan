@@ -62,4 +62,8 @@ public class Player {
     public void DiscardFromHand(Tile tile) {
         this.discardzone.AddTile(tile);
     }
+
+    public void SortHand() {
+        this.handZone.SortHand();
+    }
 }

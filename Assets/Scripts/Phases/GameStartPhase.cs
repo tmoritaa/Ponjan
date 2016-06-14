@@ -25,6 +25,10 @@ public class GameStartPhase : PhaseNode {
             }
         }
 
+        foreach (Player player in players) {
+            player.SortHand();
+        }
+
         yield break;
     }
 

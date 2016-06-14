@@ -41,6 +41,15 @@ public class Tile {
         set { this.deckIdx = value; }
     }
 
+    public static int CompareTiles(Tile x, Tile y) {
+        if (x.type != y.type) {
+            return (x.type < y.type) ? -1 : 1;
+        } else if (x.id != y.id ){
+            return (x.id < y.id) ? -1 : 1;
+        }
+        return 0;
+    }
+
     public Tile(TileType type, int id) {
         this.type = type;
         this.id = id;

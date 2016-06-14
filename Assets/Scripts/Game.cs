@@ -11,6 +11,8 @@ public class Game {
 
     private IEnumerator mainGameLoop;
 
+    private List<Func<List<Tile>, bool>> handCombinations = new List<Func<List<Tile>, bool>>();
+
     private List<Player> players = new List<Player>();
     public List<Player> Players {
         get { return this.players; }
@@ -92,6 +94,13 @@ public class Game {
         this.phaseNodes[completeHandPhase.PhaseId] = completeHandPhase;
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
         this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;
+
+        /*this.handCombinations.Add(
+            delegate(List<Tile> tiles) {
+
+                return true;
+            }
+        );*/
     }
 
     public void Start() {

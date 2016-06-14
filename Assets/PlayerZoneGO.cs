@@ -19,10 +19,12 @@ public class PlayerZoneGO : MonoBehaviour {
 
         this.handGO.Initialize();
         this.discardGO.Initialize();
+        this.deckGO.Initialize();
     }
 
-    public void UpdateZones() {
+    public void UpdateZones(Game game) {
         this.handGO.UpdateZone(this.player.HandZone.Tiles);
         this.discardGO.UpdateZone(this.player.DiscardZone.Tiles);
+        this.deckGO.UpdateZone(this.player, game.Deck);
     }
 }

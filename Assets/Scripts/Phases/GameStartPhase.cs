@@ -10,15 +10,20 @@ public class GameStartPhase : PhaseNode {
     public override IEnumerator PerformPhase(Game game) {
         List<Player> players = game.Players;
 
+        // TODO: should be random.
+        players[0].IsBoss = true;
+        players[0].IsActive = true;
+
+        game.Deck.Shuffle();
+
+        int diceRoll = UnityEngine.Random.Range(1, 7) + UnityEngine.Random.Range(1, 7);
+        game.Deck.InitDeckIndicesForPlayers(diceRoll, game.Players);
+
         for (int i = 0; i < 2; ++i) {
             foreach (Player player in players) {
                 player.Draw(4, game.Deck);
             }
         }
-
-        // TODO: should be random.
-        players[0].IsBoss = true;
-        players[0].IsActive = true;
 
         yield break;
     }

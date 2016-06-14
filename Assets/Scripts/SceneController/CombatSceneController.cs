@@ -78,7 +78,7 @@ public class CombatSceneController : MonoBehaviour {
                 case UIUpdateRequest.UpdateType.None:
                     break;
                 case UIUpdateRequest.UpdateType.UpdateBoard:
-                    this.playerZones.ForEach(z => z.UpdateZones());
+                    this.playerZones.ForEach(z => z.UpdateZones(this.game));
                     break;
             }
         }

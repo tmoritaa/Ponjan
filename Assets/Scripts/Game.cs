@@ -11,7 +11,7 @@ public class Game {
 
     private IEnumerator mainGameLoop;
 
-    private List<Func<List<Tile>, bool>> handCombinations = new List<Func<List<Tile>, bool>>();
+    private List<HandCombination> handCombinations = new List<HandCombination>();
 
     private List<Player> players = new List<Player>();
     public List<Player> Players {
@@ -95,12 +95,17 @@ public class Game {
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
         this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;
 
-        /*this.handCombinations.Add(
-            delegate(List<Tile> tiles) {
-
-                return true;
+        this.handCombinations.Add(new AllSameColorCombination());
+        this.handCombinations.Add(new AllSameCombination());
+        this.handCombinations.Add(new AllSameIdCombination());
+        this.handCombinations.Add(new OneColorAndWhitesCombination());
+        this.handCombinations.Add(new ThreeColorCombination());
+        this.handCombinations.Add(new TwoIdenticalCombination());
+        foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
+            if (entry.type == Tile.TileType.Dragon) {
+                this.handCombinations.Add(new DragonCombination(entry.id));
             }
-        );*/
+        }
     }
 
     public void Start() {
@@ -109,6 +114,19 @@ public class Game {
 
         this.mainGameLoop = this.Resume();
         this.ContinueMainGameLoop();
+    }
+
+    public List<HandCombination> ReturnValidCombinations(List<Tile> tiles) {
+        List<HandCombination> validCombs = new List<HandCombination>();
+
+        foreach (HandCombination comb in this.handCombinations) {
+            bool valid = comb.HandHasCombination(tiles);
+            if (valid) {
+                validCombs.Add(comb);
+            }
+        }
+
+        return validCombs;
     }
 
     public IEnumerator Resume() {

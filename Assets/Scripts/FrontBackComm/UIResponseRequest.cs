@@ -7,6 +7,7 @@ public class UIResponseRequest {
     public enum ResponseType {
         None,
         SelectTile,
+        DecideToComplete,
     };
 
     public ResponseType requestType = ResponseType.None;

@@ -38,6 +38,9 @@ public class CombatSceneController : MonoBehaviour {
     [SerializeField]
     List<PlayerZoneGO> playerZones;
 
+    [SerializeField]
+    GameObject completeHandButtons;
+
 	void Awake() {
         CombatSceneController.instance = this;
 
@@ -91,6 +94,10 @@ public class CombatSceneController : MonoBehaviour {
 
             switch (entry.requestType) {
                 case UIResponseRequest.ResponseType.None:
+                case UIResponseRequest.ResponseType.SelectTile:
+                    break;
+                case UIResponseRequest.ResponseType.DecideToComplete:
+                    this.completeHandButtons.SetActive(true);
                     break;
             }
         }
@@ -118,6 +125,15 @@ public class CombatSceneController : MonoBehaviour {
 
         if (handled) {
             this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
+        }
+    }
+
+    public void ButtonPressed(string action) {
+        bool handled = this.game.HandleUIResponse(action);
+
+        if (handled) {
+            this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
+            this.completeHandButtons.SetActive(false);
         }
     }
 }

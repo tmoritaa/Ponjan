@@ -90,12 +90,24 @@ public class Player {
         this.handZone.SortHand();
     }
 
-    public bool CanStealTile(Tile tile) {
-        List<Tile> mergeable = Tile.ReturnGroupedTiles(this.handZone.Tiles, CombatSceneController.SetSize - 1);
+    public bool CanStealTile(Tile stealTile) {
+        List<Tile> hand = new List<Tile>(this.handZone.Tiles);
+
+        if (this.hasReached) {
+            List<Tile> sets = Tile.ReturnGroupedTiles(hand);
+
+            foreach (Tile tile in sets) {
+                for (int i = 0; i < CombatSceneController.SetSize; ++i) {
+                    hand.Remove(hand.Find(t => t.IsSame(tile)));
+                }
+            }
+        }
+
+        List<Tile> mergeable = Tile.ReturnGroupedTiles(hand, CombatSceneController.SetSize - 1);
 
         bool canSteal = false;
-        foreach (Tile otherTile in mergeable) {
-            if (otherTile.IsSame(tile)) {
+        foreach (Tile tile in mergeable) {
+            if (tile.IsSame(stealTile)) {
                 canSteal = true;
                 break;
             }

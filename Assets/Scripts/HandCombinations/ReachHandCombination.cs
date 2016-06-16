@@ -9,6 +9,8 @@ public class ReachHandCombination : HandCombination {
     public override bool HandHasCombination(List<Tile> tiles) {
         Player player = tiles[0].Owner;
 
-        return player.HasReached;
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
+
+        return sets.Count == 3 && player.HasReached;
     }
 }

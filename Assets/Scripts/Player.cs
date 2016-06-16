@@ -108,14 +108,16 @@ public class Player {
         List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
         allTiles.AddRange(this.stealZone.Tiles);
 
-        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize);
+        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles);
 
         if (sets.Count != 2) {
             return false;
         }
 
         foreach (Tile tile in sets) {
-            allTiles.RemoveAll(t => t.IsSame(tile));
+            for (int i = 0; i < CombatSceneController.SetSize; ++i) {
+                allTiles.Remove(allTiles.Find(t => t.IsSame(tile)));
+            }
         }
 
         List<Tile> pair = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize - 1);
@@ -128,16 +130,20 @@ public class Player {
         List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
         allTiles.AddRange(this.stealZone.Tiles);
 
-        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize);
+        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles);
 
         foreach (Tile tile in sets) {
-            allTiles.RemoveAll(t => t.IsSame(tile));
+            for (int i = 0; i < CombatSceneController.SetSize; ++i) {
+                allTiles.Remove(allTiles.Find(t => t.IsSame(tile)));
+            }
         }
 
         List<Tile> pair = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize - 1);
 
         foreach (Tile tile in pair) {
-            allTiles.RemoveAll(t => t.IsSame(tile));
+            for (int i = 0; i < CombatSceneController.SetSize - 1; ++i) {
+                allTiles.Remove(allTiles.Find(t => t.IsSame(tile)));
+            }
         }
 
         Debug.Assert(allTiles.Count == 1, "Should only be one left");

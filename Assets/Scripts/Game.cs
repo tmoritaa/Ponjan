@@ -123,6 +123,7 @@ public class Game {
         this.handCombinations.Add(new ThreeColorCombination());
         this.handCombinations.Add(new TwoIdenticalCombination());
         this.handCombinations.Add(new ReachHandCombination());
+        this.handCombinations.Add(new NoStealsCombination());
         foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
             if (entry.type == Tile.TileType.Dragon) {
                 this.handCombinations.Add(new DragonCombination(entry.id));

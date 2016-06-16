@@ -77,7 +77,7 @@ public class Tile {
                 curTile = tile;
             }
 
-            if (counter >= groupNum) {
+            if (counter == groupNum) {
                 sets.Add(curTile);
                 curTile = null;
             }

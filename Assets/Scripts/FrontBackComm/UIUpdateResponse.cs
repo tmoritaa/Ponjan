@@ -7,6 +7,7 @@ public class UIUpdateRequest {
     public enum UpdateType {
         None,
         UpdateBoard,
+        Reset,
     }
 
     public UpdateType requestType = UpdateType.None;

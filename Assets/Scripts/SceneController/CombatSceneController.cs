@@ -41,12 +41,12 @@ public class CombatSceneController : MonoBehaviour {
     [SerializeField]
     GameObject completeHandButtons;
 
+    bool gameInProgress = false;
+
 	void Awake() {
         CombatSceneController.instance = this;
 
         this.Initialize();
-
-        this.game.Start();
 	}
 
     void OnDestroy() {
@@ -57,7 +57,10 @@ public class CombatSceneController : MonoBehaviour {
         this.HandleUIUpdates();
         this.HandleResponse();
 
-        if (this.curHandlingResponse.requestType == UIResponseRequest.ResponseType.None) {
+        if (!this.gameInProgress) {
+            this.gameInProgress = true;
+            this.game.StartNewRound();
+        } else if (this.curHandlingResponse.requestType == UIResponseRequest.ResponseType.None) {
             this.game.ContinueMainGameLoop();
         }
     }
@@ -83,6 +86,9 @@ public class CombatSceneController : MonoBehaviour {
                 case UIUpdateRequest.UpdateType.UpdateBoard:
                     this.playerZones.ForEach(z => z.UpdateZones(this.game));
                     break;
+                case UIUpdateRequest.UpdateType.Reset:
+                    this.Reset();
+                    break;
             }
         }
     }
@@ -103,8 +109,14 @@ public class CombatSceneController : MonoBehaviour {
         }
     }
 
+    private void Reset() {
+        this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
+        this.gameInProgress = false;
+        this.responsesToHandle.Clear();
+    }
+
     private void Initialize() {
-        this.game.Initialize(new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred", "Dred" }, tileSetupData.TileSetups);
+        this.game.Initialize(4, new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred", "Dred" }, tileSetupData.TileSetups);
 
         List<Player> players = this.game.Players;
 

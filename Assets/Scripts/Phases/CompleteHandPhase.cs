@@ -22,6 +22,7 @@ public class CompleteHandPhase : PhaseNode {
             switch(resp) {
                 case "Complete":
                     validCombs.ForEach(h => UnityEngine.Debug.Log(h.Name + " " + h.Score));
+                    game.GameComplete = true;
                     break;
                 default:
                     break;

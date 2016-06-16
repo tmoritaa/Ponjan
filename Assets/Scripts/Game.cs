@@ -31,6 +31,13 @@ public class Game {
         get { return this.deck; }
     }
 
+    private int numberOfRounds = 0;
+    private int curRound = 0;
+    private bool gameComplete = false;
+    public bool GameComplete {
+        set { this.gameComplete = value; }
+    }
+
     public void EnqueueDecision(Decision decision) {
         this.decisionsToProcess.Enqueue(decision);
     }
@@ -63,8 +70,10 @@ public class Game {
         CombatSceneController.Instance.RequestResponses(this.uiResponseRequests);
     }
 
-    public void Initialize(Player.PlayerType[] playerTypes, string[] names, List<TileSetupData.TileSetupEntry> tileSetupEntries) {
-        // Assuming there's only two players.
+    public void Initialize(int numRounds, Player.PlayerType[] playerTypes, string[] names, List<TileSetupData.TileSetupEntry> tileSetupEntries) {
+        this.numberOfRounds = numRounds;
+        this.curRound = 0;
+
         for (int i = 0; i < playerTypes.Length; ++i) {
             Player player = new Player(playerTypes[i], i, names[i]);
             this.players.Add(player);
@@ -108,9 +117,24 @@ public class Game {
         }
     }
 
-    public void Start() {
+    public void Reset() {
+        this.players.ForEach(p => p.Reset(this));
+        this.commandsToProcess.Clear();
+        this.decisionsToProcess.Clear();
+        this.uiResponseRequests.Clear();
+        this.uiUpdateRequests.Clear();
+        this.decisionWaitingResponse = null;
+        this.gameComplete = false;
+
+        // TODO: Request CombatSceneController to reset.
+        this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.Reset));
+    }
+
+    public void StartNewRound() {
         this.curPhase = this.phaseNodes[PhaseNode.PhaseID.StartGame];
         this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
+
+        this.curRound += 1;
 
         this.mainGameLoop = this.Resume();
         this.ContinueMainGameLoop();
@@ -130,7 +154,7 @@ public class Game {
     }
 
     public IEnumerator Resume() {
-        while (true) {
+        while (!this.gameComplete) {
             bool phaseStillProc = this.curPhaseEnumerator.MoveNext();
 
             // Let frontend process all game requests.
@@ -165,13 +189,14 @@ public class Game {
             if (!phaseStillProc) {
                 this.curPhase = this.curPhase.Next;
                 this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
-                // TODO: Request frontend to update.
                 this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.UpdateBoard));
                 yield return 0;
             }
         }
 
-        // yield break;
+        this.Reset();
+
+        yield break;
     }
 
     private IEnumerator ProcessQueuedDecisions() {

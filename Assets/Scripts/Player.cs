@@ -66,4 +66,15 @@ public class Player {
     public void SortHand() {
         this.handZone.SortHand();
     }
+
+    public void Reset(Game game) {
+        List<Tile> handTiles = new List<Tile>(this.handZone.Tiles);
+        handTiles.ForEach(t => game.Deck.AddTile(t));
+
+        List<Tile> discardTiles = new List<Tile>(this.discardzone.Tiles);
+        discardTiles.ForEach(t => game.Deck.AddTile(t));
+
+        this.isActive = false;
+        this.isBoss = false;
+    }
 }

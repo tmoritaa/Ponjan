@@ -10,7 +10,11 @@ public class CompleteHandPhase : PhaseNode {
     public override IEnumerator PerformPhase(Game game) {
         Player activePlayer = game.Players.Find(p => p.IsActive);
 
-        List<HandCombination> validCombs = game.ReturnValidCombinations(new List<Tile>(activePlayer.HandZone.Tiles));
+        List<Tile> allTiles = new List<Tile>(activePlayer.HandZone.Tiles);
+        allTiles.AddRange(activePlayer.StealZone.Tiles);
+        allTiles.Sort(Tile.CompareTiles);
+
+        List<HandCombination> validCombs = game.ReturnValidCombinations(allTiles);
 
         if (validCombs.Count > 0) {
             Decision decision = new CompleteHandDecision(activePlayer, game);
@@ -19,13 +23,9 @@ public class CompleteHandPhase : PhaseNode {
 
             string resp = (string)decision.Response[0];
 
-            switch(resp) {
-                case "Complete":
-                    validCombs.ForEach(h => UnityEngine.Debug.Log(h.Name + " " + h.Score));
-                    game.GameComplete = true;
-                    break;
-                default:
-                    break;
+            if (resp.Equals("Complete")) {
+                validCombs.ForEach(h => UnityEngine.Debug.Log(h.Name + " " + h.Score));
+                game.GameComplete = true;
             }
         }
 

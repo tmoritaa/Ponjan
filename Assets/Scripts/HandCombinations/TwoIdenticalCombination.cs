@@ -7,7 +7,7 @@ public class TwoIdenticalCombination : HandCombination {
     public TwoIdenticalCombination() : base("Two Identical", 1) { }
 
     public override bool HandHasCombination(List<Tile> tiles) {
-        List<Tile> sets = this.FindSets(tiles);
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         bool identicalFound = false;
         for (int i = 0; i < sets.Count; ++i) {

@@ -54,6 +54,38 @@ public class Tile {
         return 0;
     }
 
+    public static List<Tile> ReturnGroupedTiles(List<Tile> _tiles, int groupNum = CombatSceneController.SetSize) {
+        List<Tile> tiles = new List<Tile>(_tiles);
+        List<Tile> sets = new List<Tile>();
+
+        tiles.Sort(Tile.CompareTiles);
+
+        int counter = 1;
+        Tile curTile = tiles[0];
+        for (int i = 1; i < tiles.Count; ++i) {
+            if (curTile == null) {
+                curTile = tiles[i];
+                counter = 1;
+                continue;
+            }
+
+            Tile tile = tiles[i];
+            if (curTile.IsSame(tile)) {
+                ++counter;
+            } else {
+                counter = 1;
+                curTile = tile;
+            }
+
+            if (counter >= groupNum) {
+                sets.Add(curTile);
+                curTile = null;
+            }
+        }
+
+        return sets;
+    } 
+
     public Tile(TileType type, int id) {
         this.type = type;
         this.id = id;

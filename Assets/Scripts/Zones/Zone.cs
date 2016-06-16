@@ -8,6 +8,7 @@ public abstract class Zone {
         Hand,
         Deck,
         Discard,
+        Steal,
     }
 
     protected ZoneType type;

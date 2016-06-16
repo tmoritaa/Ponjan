@@ -7,7 +7,7 @@ public class AllSameCombination : HandCombination {
     public AllSameCombination() : base("All Same", 13) { }
 
     public override bool HandHasCombination(List<Tile> tiles) {
-        List<Tile> sets = this.FindSets(tiles);
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         if (sets.Count != 3) {
             return false;

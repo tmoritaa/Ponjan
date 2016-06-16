@@ -9,7 +9,6 @@ public class DrawPhase : PhaseNode {
 
     public override IEnumerator PerformPhase(Game game) {
         Player activePlayer = game.Players.Find(p => p.IsActive);
-        // TODO: replace with command.
         game.EnqueueCommand(new DrawCommand(activePlayer));
         yield break;
     }

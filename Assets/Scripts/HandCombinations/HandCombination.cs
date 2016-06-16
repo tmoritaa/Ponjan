@@ -20,35 +20,4 @@ public abstract class HandCombination {
     }
 
     public abstract bool HandHasCombination(List<Tile> tiles);
-
-    protected List<Tile> FindSets(List<Tile> tiles) {
-        List<Tile> sets = new List<Tile>();
-
-        tiles.Sort(Tile.CompareTiles);
-
-        int counter = 1;
-        Tile curTile = tiles[0];
-        for (int i = 1; i < tiles.Count; ++i) {
-            if (curTile == null) {
-                curTile = tiles[i];
-                counter = 1;
-                continue;
-            }
-
-            Tile tile = tiles[i];
-            if (curTile.IsSame(tile)) {
-                ++counter;
-            } else {
-                counter = 1;
-                curTile = tile;
-            }
-
-            if (counter >= 3) {
-                sets.Add(curTile);
-                curTile = null;
-            }
-        }
-
-        return sets;
-    }
 }

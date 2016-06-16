@@ -7,7 +7,7 @@ public class AllSameIdCombination : HandCombination {
     public AllSameIdCombination() : base("All Same Id", 1) { }
 
     public override bool HandHasCombination(List<Tile> tiles) {
-        List<Tile> sets = this.FindSets(tiles);
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         HashSet<int> ids = new HashSet<int>();
         foreach(Tile tile in sets) {

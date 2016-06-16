@@ -18,19 +18,19 @@ public class DiscardGO : MonoBehaviour {
             rectTrans.anchorMax = new Vector2(0, rectTrans.anchorMax.y);
             rectTrans.localPosition = new Vector2(imageWidth / 2 + i * imageWidth, 0);
             tileGO.transform.SetParent(this.transform, false);
-            discard.Add(tileGO);
+            this.discard.Add(tileGO);
         }
     }
 
     public void UpdateZone(List<Tile> tiles) {
-        for(int i = 0; i < discard.Count; ++i) {
+        for(int i = 0; i < this.discard.Count; ++i) {
             if (i < tiles.Count) {
-                discard[i].gameObject.SetActive(true);
+                this.discard[i].gameObject.SetActive(true);
                 Tile tile = tiles[i];
-                discard[i].Tile = tile;
-                discard[i].UpdateTile();
+                this.discard[i].Tile = tile;
+                this.discard[i].UpdateTile();
             } else {
-                discard[i].gameObject.SetActive(false);
+                this.discard[i].gameObject.SetActive(false);
             }
         }
     }

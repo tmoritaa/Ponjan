@@ -38,6 +38,8 @@ public class Game {
         set { this.gameComplete = value; }
     }
 
+    private PhaseNode nextPhaseToForce = null;
+
     public void EnqueueDecision(Decision decision) {
         this.decisionsToProcess.Enqueue(decision);
     }
@@ -56,6 +58,10 @@ public class Game {
 
     public bool HandleUIResponse(object response) {
         return this.decisionWaitingResponse.HandleUIResponse(response);
+    }
+
+    public void ForcePhaseAsNext(PhaseNode.PhaseID phaseId) {
+        this.nextPhaseToForce = this.phaseNodes[phaseId];
     }
 
     private bool CheckIfShouldYield() {
@@ -90,18 +96,21 @@ public class Game {
         PhaseNode drawPhase = new DrawPhase();
         PhaseNode completeHandPhase = new CompleteHandPhase();
         PhaseNode discardPhase = new DiscardPhase();
+        PhaseNode stealPhase = new StealPhase();
         PhaseNode changeActivePlayerPhase = new ChangeActivePlayerPhase();
 
         gameStartPhase.Next = drawPhase;
         drawPhase.Next = completeHandPhase;
         completeHandPhase.Next = discardPhase;
-        discardPhase.Next = changeActivePlayerPhase;
+        discardPhase.Next = stealPhase;
+        stealPhase.Next = changeActivePlayerPhase;
         changeActivePlayerPhase.Next = drawPhase;
 
         this.phaseNodes[gameStartPhase.PhaseId] = gameStartPhase;
         this.phaseNodes[drawPhase.PhaseId] = drawPhase;
         this.phaseNodes[completeHandPhase.PhaseId] = completeHandPhase;
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
+        this.phaseNodes[stealPhase.PhaseId] = stealPhase;
         this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;
 
         this.handCombinations.Add(new AllSameColorCombination());
@@ -126,7 +135,6 @@ public class Game {
         this.decisionWaitingResponse = null;
         this.gameComplete = false;
 
-        // TODO: Request CombatSceneController to reset.
         this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.Reset));
     }
 
@@ -187,7 +195,13 @@ public class Game {
             }
 
             if (!phaseStillProc) {
-                this.curPhase = this.curPhase.Next;
+                if (this.nextPhaseToForce != null) {
+                    this.curPhase = this.nextPhaseToForce;
+                    this.nextPhaseToForce = null;
+                } else {
+                    this.curPhase = this.curPhase.Next;
+                }
+                
                 this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
                 this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.UpdateBoard));
                 yield return 0;

@@ -8,6 +8,7 @@ public class UIResponseRequest {
         None,
         SelectTile,
         DecideToComplete,
+        DecideToSteal,
     };
 
     public ResponseType requestType = ResponseType.None;

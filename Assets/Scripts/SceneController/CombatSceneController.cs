@@ -16,6 +16,8 @@ public class CombatSceneController : MonoBehaviour {
         get { return CombatSceneController.instance; }
     }
 
+    public const int SetSize = 3;
+
     [SerializeField]
     public const int MaxPlayerHandSize = 9;
 
@@ -38,8 +40,11 @@ public class CombatSceneController : MonoBehaviour {
     [SerializeField]
     List<PlayerZoneGO> playerZones;
 
+    // Probably should come up with a better system for these buttons.
     [SerializeField]
     GameObject completeHandButtons;
+    [SerializeField]
+    GameObject stealTileButtons;
 
     bool gameInProgress = false;
 
@@ -105,6 +110,9 @@ public class CombatSceneController : MonoBehaviour {
                 case UIResponseRequest.ResponseType.DecideToComplete:
                     this.completeHandButtons.SetActive(true);
                     break;
+                case UIResponseRequest.ResponseType.DecideToSteal:
+                    this.stealTileButtons.SetActive(true);
+                    break;
             }
         }
     }
@@ -146,6 +154,7 @@ public class CombatSceneController : MonoBehaviour {
         if (handled) {
             this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
             this.completeHandButtons.SetActive(false);
+            this.stealTileButtons.SetActive(false);
         }
     }
 }

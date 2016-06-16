@@ -9,6 +9,7 @@ public abstract class PhaseNode {
         Draw,
         CompleteHand,
         Discard,
+        Steal,
         ChangeActivePlayer,
     };
     

@@ -7,7 +7,7 @@ public class AllSameColorCombination : HandCombination {
     public AllSameColorCombination() : base("All Same Color", 3) { }
 
     public override bool HandHasCombination(List<Tile> tiles) {
-        List<Tile> sets = this.FindSets(tiles);
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         int redExists = sets.Exists(t => t.Type == Tile.TileType.Red) ? 1 : 0;
         int blueExists = sets.Exists(t => t.Type == Tile.TileType.Blue) ? 1 : 0;

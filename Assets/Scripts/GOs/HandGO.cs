@@ -23,14 +23,14 @@ public class HandGO : MonoBehaviour {
     }
 
     public void UpdateZone(List<Tile> tiles) {
-        for(int i = 0; i < hand.Count; ++i) {
+        for(int i = 0; i < this.hand.Count; ++i) {
             if (i < tiles.Count) {
-                hand[i].gameObject.SetActive(true);
+                this.hand[i].gameObject.SetActive(true);
                 Tile tile = tiles[i];
-                hand[i].Tile = tile;
-                hand[i].UpdateTile();
+                this.hand[i].Tile = tile;
+                this.hand[i].UpdateTile();
             } else {
-                hand[i].gameObject.SetActive(false);
+                this.hand[i].gameObject.SetActive(false);
             }
         }
     }

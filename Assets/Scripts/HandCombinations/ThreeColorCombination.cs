@@ -7,7 +7,7 @@ public class ThreeColorCombination : HandCombination {
     public ThreeColorCombination() : base("Three Colors", 2) { }
 
     public override bool HandHasCombination(List<Tile> tiles) {
-        List<Tile> sets = this.FindSets(tiles);
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         return (sets.Count == 3 && 
             sets.Exists(t => t.Type == Tile.TileType.Red) && 

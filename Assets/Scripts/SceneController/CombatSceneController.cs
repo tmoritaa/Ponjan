@@ -45,6 +45,8 @@ public class CombatSceneController : MonoBehaviour {
     GameObject completeHandButtons;
     [SerializeField]
     GameObject stealTileButtons;
+    [SerializeField]
+    GameObject reachButton;
 
     bool gameInProgress = false;
 
@@ -113,6 +115,9 @@ public class CombatSceneController : MonoBehaviour {
                 case UIResponseRequest.ResponseType.DecideToSteal:
                     this.stealTileButtons.SetActive(true);
                     break;
+                case UIResponseRequest.ResponseType.SelectTileOrReach:
+                    this.reachButton.SetActive(true);
+                    break;
             }
         }
     }
@@ -144,7 +149,7 @@ public class CombatSceneController : MonoBehaviour {
         bool handled = this.game.HandleUIResponse(tile);
 
         if (handled) {
-            this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
+            this.ResponseHandled();
         }
     }
 
@@ -152,9 +157,14 @@ public class CombatSceneController : MonoBehaviour {
         bool handled = this.game.HandleUIResponse(action);
 
         if (handled) {
-            this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
-            this.completeHandButtons.SetActive(false);
-            this.stealTileButtons.SetActive(false);
+            this.ResponseHandled();
         }
+    }
+
+    private void ResponseHandled() {
+        this.curHandlingResponse.requestType = UIResponseRequest.ResponseType.None;
+        this.completeHandButtons.SetActive(false);
+        this.stealTileButtons.SetActive(false);
+        this.reachButton.SetActive(false);
     }
 }

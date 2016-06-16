@@ -12,7 +12,9 @@ public class PickTileDecision : Decision {
 
         if (this.CanBeCastTo(response, typeof(Tile))) {
             Tile tile = (Tile)response;
-            if (tile.Owner == this.controller && tile.Zone.Type == Zone.ZoneType.Hand) {
+            if (tile.Owner == this.controller && tile.Zone.Type == Zone.ZoneType.Hand && 
+                (!this.controller.HasReached || (this.controller.HasReached && this.controller.HandZone.Tiles.Last() == tile))) {
+                finalResponse.Add("Discard");
                 finalResponse.Add(response);
             }
         }

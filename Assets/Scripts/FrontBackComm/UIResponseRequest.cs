@@ -7,6 +7,7 @@ public class UIResponseRequest {
     public enum ResponseType {
         None,
         SelectTile,
+        SelectTileOrReach,
         DecideToComplete,
         DecideToSteal,
     };

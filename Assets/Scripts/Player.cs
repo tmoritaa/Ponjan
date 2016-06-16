@@ -35,6 +35,12 @@ public class Player {
         set { this.isActive = value; }
     }
 
+    private bool hasReached = false;
+    public bool HasReached {
+        get { return this.hasReached; }
+        set { this.hasReached = value; }
+    }
+
     private HandZone handZone = new HandZone();
     public HandZone HandZone {
         get { return this.handZone; }
@@ -98,6 +104,47 @@ public class Player {
         return canSteal;
     }
 
+    public bool OneAwayFromCompletion() {
+        List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
+        allTiles.AddRange(this.stealZone.Tiles);
+
+        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize);
+
+        if (sets.Count != 2) {
+            return false;
+        }
+
+        foreach (Tile tile in sets) {
+            allTiles.RemoveAll(t => t.IsSame(tile));
+        }
+
+        List<Tile> pair = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize - 1);
+        return pair.Count == 1;
+    }
+
+    public Tile GetOddOneOutTile() {
+        Debug.Assert(this.OneAwayFromCompletion(), "Odd one out tile only makes sense when player is cone away from completion");
+
+        List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
+        allTiles.AddRange(this.stealZone.Tiles);
+
+        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize);
+
+        foreach (Tile tile in sets) {
+            allTiles.RemoveAll(t => t.IsSame(tile));
+        }
+
+        List<Tile> pair = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize - 1);
+
+        foreach (Tile tile in pair) {
+            allTiles.RemoveAll(t => t.IsSame(tile));
+        }
+
+        Debug.Assert(allTiles.Count == 1, "Should only be one left");
+
+        return allTiles[0];
+    }
+
     public void Reset(Game game) {
         List<Tile> handTiles = new List<Tile>(this.handZone.Tiles);
         handTiles.ForEach(t => game.Deck.AddTile(t));
@@ -110,5 +157,6 @@ public class Player {
 
         this.isActive = false;
         this.isBoss = false;
+        this.hasReached = false;
     }
 }

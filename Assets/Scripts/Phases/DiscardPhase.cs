@@ -10,12 +10,20 @@ public class DiscardPhase : PhaseNode {
     public override IEnumerator PerformPhase(Game game) {
         Player activePlayer = game.Players.Find(p => p.IsActive);
 
-        Decision decision = new PickTileDecision(activePlayer, game);
+        Decision decision = new PickTileOrReachDecision(activePlayer, game);
         game.EnqueueDecision(decision);
         yield return 0;
 
-        Tile tile = (Tile)decision.Response[0];
-        game.EnqueueCommand(new DiscardCommand(activePlayer, tile));
+        string action = (string)decision.Response[0];
+
+        if (action.Equals("Discard")) {
+            Tile tile = (Tile)decision.Response[1];
+            game.EnqueueCommand(new DiscardCommand(activePlayer, tile));
+        } else if (action.Equals("Reach")) {
+            game.EnqueueCommand(new PlayerReachCommand(activePlayer));
+            game.EnqueueCommand(new DiscardCommand(activePlayer, activePlayer.GetOddOneOutTile()));
+        }
+
         yield return 0;
 
         yield break;

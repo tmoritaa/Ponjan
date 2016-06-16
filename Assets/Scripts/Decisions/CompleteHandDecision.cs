@@ -5,14 +5,23 @@ using System.Linq;
 using System.Text;
 
 public class CompleteHandDecision : Decision {
-    public CompleteHandDecision(Player player, Game game) : base(player, game) { }
+    public enum CompletionType {
+        Draw,
+        Steal,
+    }
+    private CompletionType compType;
+
+    public CompleteHandDecision(Player player, Game game, CompletionType compType) : base(player, game) {
+        this.compType = compType;
+    }
 
     public override bool HandleUIResponse(object response) {
         List<object> finalResponse = new List<object>();
 
         if (this.CanBeCastTo(response, typeof(string))) {
             string action = (string)response;
-            if (action.Equals("Complete") || action.Equals("Cancel")) {
+            if (action.Equals("Complete") || 
+                (((this.compType == CompletionType.Steal && this.controller.HandZone.Tiles.Count > 0) || this.compType == CompletionType.Draw) && action.Equals("Cancel"))) {
                 finalResponse.Add(response);
             }
         }

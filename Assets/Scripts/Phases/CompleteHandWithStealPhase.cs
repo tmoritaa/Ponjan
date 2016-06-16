@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class CompleteHandPhase : PhaseNode {
-    public CompleteHandPhase() : base(PhaseID.CompleteHand) {}
+public class CompleteHandWithStealPhase : PhaseNode {
+    public CompleteHandWithStealPhase() : base(PhaseID.CompleteHandWithSteal) {}
 
     public override IEnumerator PerformPhase(Game game) {
         Player activePlayer = game.Players.Find(p => p.IsActive);
@@ -17,14 +17,14 @@ public class CompleteHandPhase : PhaseNode {
         List<HandCombination> validCombs = game.ReturnValidCombinations(allTiles);
 
         if (validCombs.Count > 0) {
-            Decision decision = new CompleteHandDecision(activePlayer, game, CompleteHandDecision.CompletionType.Draw);
+            Decision decision = new CompleteHandDecision(activePlayer, game, CompleteHandDecision.CompletionType.Steal);
             game.EnqueueDecision(decision);
             yield return 0;
 
             string resp = (string)decision.Response[0];
 
             if (resp.Equals("Complete")) {
-                validCombs.ForEach(h => UnityEngine.Debug.Log("Draw " + h.Name + " " + h.Score));
+                validCombs.ForEach(h => UnityEngine.Debug.Log("Steal " + h.Name + " " + h.Score));
                 game.GameComplete = true;
             }
         }

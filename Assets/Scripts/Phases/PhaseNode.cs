@@ -8,6 +8,7 @@ public abstract class PhaseNode {
         StartGame,
         Draw,
         CompleteHand,
+        CompleteHandWithSteal,
         Discard,
         Steal,
         ChangeActivePlayer,

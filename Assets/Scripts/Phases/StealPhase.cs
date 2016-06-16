@@ -33,7 +33,7 @@ public class StealPhase : PhaseNode {
                 if (response.Equals("Steal")) {
                     game.EnqueueCommand(new StealTileCommand(player, stealableTile));
                     game.EnqueueCommand(new ChangeActivePlayerCommand(activePlayer, player));
-                    game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseNode.PhaseID.CompleteHand));
+                    game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseNode.PhaseID.CompleteHandWithSteal));
                     break;
                 }
             }

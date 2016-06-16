@@ -95,6 +95,7 @@ public class Game {
         PhaseNode gameStartPhase = new GameStartPhase();
         PhaseNode drawPhase = new DrawPhase();
         PhaseNode completeHandPhase = new CompleteHandPhase();
+        PhaseNode completeHandWithStealPhase = new CompleteHandWithStealPhase();
         PhaseNode discardPhase = new DiscardPhase();
         PhaseNode stealPhase = new StealPhase();
         PhaseNode changeActivePlayerPhase = new ChangeActivePlayerPhase();
@@ -102,6 +103,7 @@ public class Game {
         gameStartPhase.Next = drawPhase;
         drawPhase.Next = completeHandPhase;
         completeHandPhase.Next = discardPhase;
+        completeHandWithStealPhase.Next = discardPhase;
         discardPhase.Next = stealPhase;
         stealPhase.Next = changeActivePlayerPhase;
         changeActivePlayerPhase.Next = drawPhase;
@@ -109,6 +111,7 @@ public class Game {
         this.phaseNodes[gameStartPhase.PhaseId] = gameStartPhase;
         this.phaseNodes[drawPhase.PhaseId] = drawPhase;
         this.phaseNodes[completeHandPhase.PhaseId] = completeHandPhase;
+        this.phaseNodes[completeHandWithStealPhase.PhaseId] = completeHandWithStealPhase;
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
         this.phaseNodes[stealPhase.PhaseId] = stealPhase;
         this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;

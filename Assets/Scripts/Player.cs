@@ -23,7 +23,7 @@ public class Player {
         get { return this.name; }
     }
 
-    private int score = 0;
+    private int score = 25;
     public int Score {
         get { return this.score; }
     }

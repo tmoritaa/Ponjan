@@ -49,6 +49,8 @@ public class CombatSceneController : MonoBehaviour {
     GameObject reachButton;
     [SerializeField]
     RoundResultsScreen roundResultsScreen;
+    [SerializeField]
+    ScoreDisplayGO scoreDisplayGO;
 
     bool gameInProgress = false;
 
@@ -96,6 +98,7 @@ public class CombatSceneController : MonoBehaviour {
                     break;
                 case UIUpdateRequest.UpdateType.UpdateBoard:
                     this.playerZones.ForEach(z => z.UpdateZones(this.game));
+                    this.scoreDisplayGO.UpdateText(this.game.Players);
                     break;
                 case UIUpdateRequest.UpdateType.Reset:
                     this.Reset();

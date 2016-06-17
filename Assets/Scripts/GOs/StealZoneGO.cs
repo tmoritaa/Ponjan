@@ -19,7 +19,7 @@ public class StealZoneGO : MonoBehaviour {
                 RectTransform rectTrans = tile.GetComponent<RectTransform>();
                 rectTrans.anchorMin = new Vector2(rectTrans.anchorMin.x, 0);
                 rectTrans.anchorMax = new Vector2(rectTrans.anchorMax.x, 0);
-                rectTrans.localPosition = new Vector2((j - midIdx) * imageWidth, i * imageHeight);
+                rectTrans.localPosition = new Vector2((j - midIdx) * imageWidth, i * imageHeight + imageHeight / 2);
                 tile.transform.SetParent(this.transform, false);
 
                 this.tileGOs.Add(tile);

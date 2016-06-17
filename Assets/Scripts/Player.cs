@@ -79,6 +79,13 @@ public class Player {
         this.discardZone.AddTile(tile);
     }
 
+    public void StealTileForCompletion(Tile tile, Player stolenPlayer) {
+        tile.Owner = this;
+        tile.StolenPlayer = stolenPlayer;
+
+        this.handZone.AddTile(tile);
+    }
+
     public void StealTileFromDiscard(Tile tile, Player stolenPlayer) {
         tile.Owner = this;
         tile.StolenPlayer = stolenPlayer;
@@ -169,19 +176,10 @@ public class Player {
         return allTiles[0];
     }
 
-    public void ScorePoints(List<HandCombination> handCombs, HandCombination.CompletionType compType, List<Player> players) {
+    public void ScorePoints(List<HandCombination> handCombs, List<Player> playersToTake) {
         int score = Game.CalculateScoreFromCombinations(handCombs);
 
-        switch (compType) {
-            case HandCombination.CompletionType.Draw:
-                List<Player> playersToTake = players.Where(p => p != this).ToList();
-                playersToTake.ForEach(p => p.score -= (score / playersToTake.Count));
-                break;
-            case HandCombination.CompletionType.Steal:
-                Player stolenPlayer = this.stealZone.GetLastStolenPlayer();
-                stolenPlayer.score -= score;
-                break;
-        }
+        playersToTake.ForEach(p => p.score -= (score / playersToTake.Count));
 
         this.score += score;
     }

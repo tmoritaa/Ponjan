@@ -24,7 +24,7 @@ public class CompleteHandPhase : PhaseNode {
             string resp = (string)decision.Response[0];
 
             if (resp.Equals("Complete")) {
-                activePlayer.ScorePoints(validCombs, HandCombination.CompletionType.Draw, game.Players);
+                activePlayer.ScorePoints(validCombs, game.Players.Where(p => p != activePlayer).ToList());
                 game.EnqueueDecision(new DisplayCompletedHandDecision(activePlayer, game, validCombs));
                 yield return 0;
 

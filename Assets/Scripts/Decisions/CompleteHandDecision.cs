@@ -17,8 +17,8 @@ public class CompleteHandDecision : Decision {
         if (this.CanBeCastTo(response, typeof(string))) {
             string action = (string)response;
             if (action.Equals("Complete") || 
-                (((this.compType == HandCombination.CompletionType.Steal && 
-                this.controller.HandZone.Tiles.Count > 0) || this.compType == HandCombination.CompletionType.Draw) && action.Equals("Cancel"))) {
+                (((this.compType == HandCombination.CompletionType.Steal && this.controller.HandZone.Tiles.Count > 0) 
+                    || this.compType == HandCombination.CompletionType.Draw) && action.Equals("Cancel"))) {
                 finalResponse.Add(response);
             }
         }

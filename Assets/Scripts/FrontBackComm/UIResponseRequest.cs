@@ -10,9 +10,12 @@ public class UIResponseRequest {
         SelectTileOrReach,
         DecideToComplete,
         DecideToSteal,
+        DisplayCompletedHand,
     };
 
     public ResponseType requestType = ResponseType.None;
+
+    public List<object> objs = new List<object>();
 
     public UIResponseRequest(ResponseType requestType) {
         this.requestType = requestType;

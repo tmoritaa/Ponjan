@@ -47,6 +47,8 @@ public class CombatSceneController : MonoBehaviour {
     GameObject stealTileButtons;
     [SerializeField]
     GameObject reachButton;
+    [SerializeField]
+    RoundResultsScreen roundResultsScreen;
 
     bool gameInProgress = false;
 
@@ -64,11 +66,13 @@ public class CombatSceneController : MonoBehaviour {
         this.HandleUIUpdates();
         this.HandleResponse();
 
-        if (!this.gameInProgress) {
-            this.gameInProgress = true;
-            this.game.StartNewRound();
-        } else if (this.curHandlingResponse.requestType == UIResponseRequest.ResponseType.None) {
-            this.game.ContinueMainGameLoop();
+        if (this.curHandlingResponse.requestType == UIResponseRequest.ResponseType.None) {
+            if (!this.gameInProgress) {
+                this.gameInProgress = true;
+                this.game.StartNewRound();
+            } else {
+                this.game.ContinueMainGameLoop();
+            }
         }
     }
 
@@ -118,8 +122,26 @@ public class CombatSceneController : MonoBehaviour {
                 case UIResponseRequest.ResponseType.SelectTileOrReach:
                     this.reachButton.SetActive(true);
                     break;
+                case UIResponseRequest.ResponseType.DisplayCompletedHand:
+                    this.DisplayCompleteHand(entry.objs);
+                    break;
             }
         }
+    }
+
+    private void DisplayCompleteHand(List<object> objs) {
+        // Parse input.
+        Player player = (Player)objs[0];
+        List<HandCombination> handCombs = new List<HandCombination>();
+        for (int i = 1; i < objs.Count; ++i) {
+            handCombs.Add((HandCombination)objs[i]);
+        }
+
+        // Pass to game object responsible for displaying.
+        this.roundResultsScreen.UpdateResults(player, handCombs);
+
+        // Set game object to be displayed.        
+        this.roundResultsScreen.gameObject.SetActive(true);
     }
 
     private void Reset() {
@@ -143,6 +165,11 @@ public class CombatSceneController : MonoBehaviour {
         for (int i = 0; i < this.playerZones.Count; ++i) {
             this.playerZones[i].Initialize(players[i]);
         }
+
+        this.roundResultsScreen.gameObject.SetActive(false);
+        this.completeHandButtons.gameObject.SetActive(false);
+        this.stealTileButtons.gameObject.SetActive(false);
+        this.reachButton.gameObject.SetActive(false);
     }
 
     public void TilePressed(Tile tile) {
@@ -166,5 +193,6 @@ public class CombatSceneController : MonoBehaviour {
         this.completeHandButtons.SetActive(false);
         this.stealTileButtons.SetActive(false);
         this.reachButton.SetActive(false);
+        this.roundResultsScreen.gameObject.SetActive(false);
     }
 }

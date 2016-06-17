@@ -5,13 +5,9 @@ using System.Linq;
 using System.Text;
 
 public class CompleteHandDecision : Decision {
-    public enum CompletionType {
-        Draw,
-        Steal,
-    }
-    private CompletionType compType;
+    private HandCombination.CompletionType compType;
 
-    public CompleteHandDecision(Player player, Game game, CompletionType compType) : base(player, game) {
+    public CompleteHandDecision(Player player, Game game, HandCombination.CompletionType compType) : base(player, game) {
         this.compType = compType;
     }
 
@@ -21,7 +17,8 @@ public class CompleteHandDecision : Decision {
         if (this.CanBeCastTo(response, typeof(string))) {
             string action = (string)response;
             if (action.Equals("Complete") || 
-                (((this.compType == CompletionType.Steal && this.controller.HandZone.Tiles.Count > 0) || this.compType == CompletionType.Draw) && action.Equals("Cancel"))) {
+                (((this.compType == HandCombination.CompletionType.Steal && 
+                this.controller.HandZone.Tiles.Count > 0) || this.compType == HandCombination.CompletionType.Draw) && action.Equals("Cancel"))) {
                 finalResponse.Add(response);
             }
         }

@@ -14,10 +14,10 @@ public class CompleteHandWithStealPhase : PhaseNode {
         allTiles.AddRange(activePlayer.StealZone.Tiles);
         allTiles.Sort(Tile.CompareTiles);
 
-        List<HandCombination> validCombs = game.ReturnValidCombinations(allTiles);
+        List<HandCombination> validCombs = game.ReturnValidCombinations(allTiles, HandCombination.CompletionType.Steal);
 
         if (validCombs.Count > 0) {
-            Decision decision = new CompleteHandDecision(activePlayer, game, CompleteHandDecision.CompletionType.Steal);
+            Decision decision = new CompleteHandDecision(activePlayer, game, HandCombination.CompletionType.Steal);
             game.EnqueueDecision(decision);
             yield return 0;
 

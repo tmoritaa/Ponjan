@@ -6,7 +6,7 @@ using System.Text;
 public class AllSameCombination : HandCombination {
     public AllSameCombination() : base("All Same", 13) { }
 
-    public override bool HandHasCombination(List<Tile> tiles) {
+    public override bool HandHasCombination(List<Tile> tiles, HandCombination.CompletionType compType) {
         List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         if (sets.Count != 3) {

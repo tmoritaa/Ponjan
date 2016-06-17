@@ -6,7 +6,7 @@ using System.Text;
 public class ReachHandCombination : HandCombination {
     public ReachHandCombination() : base("Reach", 1) {}
 
-    public override bool HandHasCombination(List<Tile> tiles) {
+    public override bool HandHasCombination(List<Tile> tiles, HandCombination.CompletionType compType) {
         Player player = tiles[0].Owner;
 
         List<Tile> sets = Tile.ReturnGroupedTiles(tiles);

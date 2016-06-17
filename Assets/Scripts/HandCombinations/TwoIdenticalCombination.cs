@@ -6,7 +6,7 @@ using System.Text;
 public class TwoIdenticalCombination : HandCombination {
     public TwoIdenticalCombination() : base("Two Identical", 1) { }
 
-    public override bool HandHasCombination(List<Tile> tiles) {
+    public override bool HandHasCombination(List<Tile> tiles, HandCombination.CompletionType compType) {
         List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         bool identicalFound = false;

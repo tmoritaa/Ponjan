@@ -124,6 +124,7 @@ public class Game {
         this.handCombinations.Add(new TwoIdenticalCombination());
         this.handCombinations.Add(new ReachHandCombination());
         this.handCombinations.Add(new NoStealsCombination());
+        this.handCombinations.Add(new CompleteWithDrawCombination());
         foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
             if (entry.type == Tile.TileType.Dragon) {
                 this.handCombinations.Add(new DragonCombination(entry.id));
@@ -153,11 +154,11 @@ public class Game {
         this.ContinueMainGameLoop();
     }
 
-    public List<HandCombination> ReturnValidCombinations(List<Tile> tiles) {
+    public List<HandCombination> ReturnValidCombinations(List<Tile> tiles, HandCombination.CompletionType compType) {
         List<HandCombination> validCombs = new List<HandCombination>();
 
         foreach (HandCombination comb in this.handCombinations) {
-            bool valid = comb.HandHasCombination(tiles);
+            bool valid = comb.HandHasCombination(tiles, compType);
             if (valid) {
                 validCombs.Add(comb);
             }

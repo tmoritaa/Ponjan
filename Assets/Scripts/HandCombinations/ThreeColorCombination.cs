@@ -6,7 +6,7 @@ using System.Text;
 public class ThreeColorCombination : HandCombination {
     public ThreeColorCombination() : base("Three Colors", 2) { }
 
-    public override bool HandHasCombination(List<Tile> tiles) {
+    public override bool HandHasCombination(List<Tile> tiles, HandCombination.CompletionType compType) {
         List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         return (sets.Count == 3 && 

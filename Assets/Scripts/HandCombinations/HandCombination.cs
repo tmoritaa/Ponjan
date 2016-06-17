@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 
 public abstract class HandCombination {
+    public enum CompletionType {
+        Draw,
+        Steal,
+    }
+
     protected string name;
     public string Name {
         get { return this.name; }
@@ -19,5 +24,5 @@ public abstract class HandCombination {
         this.score = score;
     }
 
-    public abstract bool HandHasCombination(List<Tile> tiles);
+    public abstract bool HandHasCombination(List<Tile> tiles, CompletionType compType);
 }

@@ -6,7 +6,7 @@ using System.Text;
 public class OneColorAndWhitesCombination : HandCombination {
     public OneColorAndWhitesCombination() : base("One Color and Whites", 2) { }
 
-    public override bool HandHasCombination(List<Tile> tiles) {
+    public override bool HandHasCombination(List<Tile> tiles, HandCombination.CompletionType compType) {
         List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         int redExists = sets.Exists(t => t.Type == Tile.TileType.Red) ? 1 : 0;

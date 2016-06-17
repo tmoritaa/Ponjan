@@ -10,7 +10,7 @@ public class DragonCombination : HandCombination {
         this.id = id;
     }
 
-    public override bool HandHasCombination(List<Tile> tiles) {
+    public override bool HandHasCombination(List<Tile> tiles, HandCombination.CompletionType compType) {
         List<Tile> sets = Tile.ReturnGroupedTiles(tiles);
 
         bool exists = sets.Exists(t => t.Type == Tile.TileType.Dragon && t.Id == this.id);

@@ -23,6 +23,11 @@ public class Player {
         get { return this.name; }
     }
 
+    private int score = 0;
+    public int Score {
+        get { return this.score; }
+    }
+
     private bool isBoss = false;
     public bool IsBoss {
         get { return this.isBoss; }
@@ -161,6 +166,11 @@ public class Player {
         Debug.Assert(allTiles.Count == 1, "Should only be one left");
 
         return allTiles[0];
+    }
+
+    public void ScorePoints(List<HandCombination> handCombs) {
+        int score = Game.CalculateScoreFromCombinations(handCombs);
+        this.score += score;
     }
 
     public void Reset(Game game) {

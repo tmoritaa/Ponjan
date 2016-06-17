@@ -24,7 +24,7 @@ public class CompleteHandWithStealPhase : PhaseNode {
             string resp = (string)decision.Response[0];
 
             if (resp.Equals("Complete")) {
-                //validCombs.ForEach(h => UnityEngine.Debug.Log("Steal " + h.Name + " " + h.Score));
+                activePlayer.ScorePoints(validCombs);
                 game.EnqueueDecision(new DisplayCompletedHandDecision(activePlayer, game, validCombs));
                 yield return 0;
 

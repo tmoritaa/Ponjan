@@ -155,6 +155,7 @@ public class Game {
         this.uiUpdateRequests.Clear();
         this.decisionWaitingResponse = null;
         this.gameComplete = false;
+        this.Deck.ResetTiles();
 
         this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.Reset));
     }

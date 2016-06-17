@@ -29,6 +29,12 @@ public class Tile {
         set { this.owner = value; }
     }
 
+    private Player stolenPlayer = null;
+    public Player StolenPlayer {
+        get { return this.stolenPlayer; }
+        set { this.stolenPlayer = value; }
+    }
+
     Zone zone;
     public Zone Zone {
         get { return this.zone; }
@@ -39,6 +45,10 @@ public class Tile {
     public int DeckIdx {
         get { return this.deckIdx; }
         set { this.deckIdx = value; }
+    }
+
+    public void Reset() {
+        this.stolenPlayer = null;
     }
 
     public bool IsSame(Tile tile) {

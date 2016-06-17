@@ -24,7 +24,7 @@ public class CompleteHandWithStealPhase : PhaseNode {
             string resp = (string)decision.Response[0];
 
             if (resp.Equals("Complete")) {
-                activePlayer.ScorePoints(validCombs);
+                activePlayer.ScorePoints(validCombs, HandCombination.CompletionType.Steal, game.Players);
                 game.EnqueueDecision(new DisplayCompletedHandDecision(activePlayer, game, validCombs));
                 yield return 0;
 

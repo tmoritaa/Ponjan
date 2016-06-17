@@ -47,4 +47,8 @@ public class DeckZone : Zone {
         }
         this.tiles = reorderedTiles;
     }
+
+    public void ResetTiles() {
+        this.Tiles.ForEach(t => t.Reset());
+    }
 }

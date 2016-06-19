@@ -22,15 +22,20 @@ public abstract class Decision {
 
     public virtual IEnumerator PerformDecision() {
         IEnumerator ienum = null;
-        switch (this.controller.ControllerType) {
-            case Player.PlayerType.AI:
-                ienum = this.HandleAI();
-                break;
-            case Player.PlayerType.Human:
-                ienum = this.HandlePlayer();
-                break;
-            default:
-                break;
+
+        if (this.controller != null) {
+            switch (this.controller.ControllerType) {
+                case Player.PlayerType.AI:
+                    ienum = this.HandleAI();
+                    break;
+                case Player.PlayerType.Human:
+                    ienum = this.HandlePlayer();
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            ienum = this.HandlePlayer();
         }
 
         bool hasNext = true;

@@ -128,6 +128,9 @@ public class CombatSceneController : MonoBehaviour {
                 case UIResponseRequest.ResponseType.DisplayCompletedHand:
                     this.DisplayCompleteHand(entry.objs);
                     break;
+                case UIResponseRequest.ResponseType.DisplayNoDeckScoring:
+                    this.DisplayNoDeckScoring();
+                    break;
             }
         }
     }
@@ -141,7 +144,14 @@ public class CombatSceneController : MonoBehaviour {
         }
 
         // Pass to game object responsible for displaying.
-        this.roundResultsScreen.UpdateResults(player, handCombs);
+        this.roundResultsScreen.UpdateResultsForHandCombDisplay(player, handCombs);
+
+        // Set game object to be displayed.        
+        this.roundResultsScreen.gameObject.SetActive(true);
+    }
+
+    private void DisplayNoDeckScoring() {
+        this.roundResultsScreen.UpdateResultsForNoDeckScoring(this.game.Players);
 
         // Set game object to be displayed.        
         this.roundResultsScreen.gameObject.SetActive(true);

@@ -40,6 +40,35 @@ public class Game {
 
     private PhaseNode nextPhaseToForce = null;
 
+    public static List<int> CalculateScoreForNoDeck(List<Player> players) {
+        List<int> scoreChangePerPlayer = new List<int>() { 0, 0, 0 };
+
+        List<Player> playersTenpai = new List<Player>();
+        List<Player> playersNoTenpai = new List<Player>();
+        foreach (Player player in players) {
+            if (player.OneAwayFromCompletion()) {
+                playersTenpai.Add(player);
+            } else {
+                playersNoTenpai.Add(player);
+            }
+        }
+
+        if (playersTenpai.Count == 0 || playersNoTenpai.Count == 0) {
+            return scoreChangePerPlayer;
+        }
+
+        const int BASE_POINTS = 30;
+        foreach (Player player in players) {
+            if (playersTenpai.Exists(p => p == player)) {
+                scoreChangePerPlayer[player.Id] = BASE_POINTS / playersNoTenpai.Count;
+            } else {
+                scoreChangePerPlayer[player.Id] = -BASE_POINTS / playersNoTenpai.Count;
+            } 
+        }
+
+        return scoreChangePerPlayer;
+    }
+
     public static int CalculateScoreFromCombinations(List<HandCombination> handCombs, bool isBoss) {
         int points = 0;
         int finalScore = 0;

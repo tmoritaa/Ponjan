@@ -11,6 +11,7 @@ public class UIResponseRequest {
         DecideToComplete,
         DecideToSteal,
         DisplayCompletedHand,
+        DisplayNoDeckScoring,
     };
 
     public ResponseType requestType = ResponseType.None;

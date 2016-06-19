@@ -26,6 +26,7 @@ public class Player {
     private int score = 250;
     public int Score {
         get { return this.score; }
+        set { this.score = value; }
     }
 
     private bool isBoss = false;

@@ -17,5 +17,9 @@ public class ScoreDisplayGO : MonoBehaviour {
         this.botText.text = players[0].Score.ToString();
         this.rightText.text = players[1].Score.ToString();
         this.leftText.text = players[2].Score.ToString();
+
+        this.botText.color = players[0].IsBoss ? new Color(1, 0, 0) : new Color(0, 0, 0);
+        this.rightText.color = players[1].IsBoss ? new Color(1, 0, 0) : new Color(0, 0, 0);
+        this.leftText.color = players[2].IsBoss ? new Color(1, 0, 0) : new Color(0, 0, 0);
     }
 }

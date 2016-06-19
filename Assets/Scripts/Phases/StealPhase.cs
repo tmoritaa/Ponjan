@@ -50,7 +50,7 @@ public class StealPhase : PhaseNode {
                     if (resp.Equals("Complete")) {
                         player.StealTileForCompletion(stealableTile, activePlayer);
                         player.ScorePoints(validCombs, new List<Player>() { activePlayer });
-                        game.EnqueueDecision(new DisplayCompletedHandDecision(activePlayer, game, validCombs));
+                        game.EnqueueDecision(new DisplayCompletedHandDecision(player, game, validCombs));
                         yield return 0;
 
                         game.GameComplete = true;

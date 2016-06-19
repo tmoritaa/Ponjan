@@ -109,8 +109,13 @@ public class Player {
         this.handZone.SortHand();
     }
 
-    public bool CanStealTile(Tile stealTile) {
+    public bool CanStealTileForMerge(Tile stealTile) {
         List<Tile> hand = new List<Tile>(this.handZone.Tiles);
+
+        // This is to prevent a player to merge the last set of his hand.
+        if (hand.Count <= CombatSceneController.SetSize - 1) {
+            return false;
+        }
 
         if (this.hasReached) {
             List<Tile> sets = Tile.ReturnGroupedTiles(hand);

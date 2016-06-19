@@ -20,8 +20,8 @@ public class DiscardPhase : PhaseNode {
             Tile tile = (Tile)decision.Response[1];
             game.EnqueueCommand(new DiscardCommand(activePlayer, tile));
         } else if (action.Equals("Reach")) {
-            game.EnqueueCommand(new PlayerReachCommand(activePlayer));
             game.EnqueueCommand(new DiscardCommand(activePlayer, activePlayer.GetOddOneOutTile()));
+            game.EnqueueCommand(new PlayerReachCommand(activePlayer));
         }
 
         yield return 0;

@@ -46,6 +46,12 @@ public class Player {
         set { this.hasReached = value; }
     }
 
+    private bool ippatsuPotential = false;
+    public bool IppatsuPotential {
+        get { return this.ippatsuPotential; }
+        set { this.ippatsuPotential = value; }
+    }
+
     private HandZone handZone = new HandZone();
     public HandZone HandZone {
         get { return this.handZone; }

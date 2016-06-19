@@ -13,6 +13,7 @@ public class PlayerReachCommand : Command {
 
     public override IEnumerator PerformCommand(Game game) {
         this.player.HasReached = true;
+        this.player.IppatsuPotential = true;
         yield break;
     }
 }

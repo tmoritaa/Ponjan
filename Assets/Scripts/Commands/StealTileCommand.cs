@@ -17,6 +17,7 @@ public class StealTileCommand : Command {
 
     public override IEnumerator PerformCommand(Game game) {
         this.stealingPlayer.StealTileFromDiscard(this.tile, this.stolenPlayer);
+        game.Players.ForEach(p => p.IppatsuPotential = false);
         yield break;
     }
 }

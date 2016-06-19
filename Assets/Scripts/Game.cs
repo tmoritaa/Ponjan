@@ -137,6 +137,7 @@ public class Game {
         this.handCombinations.Add(new ReachHandCombination());
         this.handCombinations.Add(new NoStealsCombination());
         this.handCombinations.Add(new CompleteWithDrawCombination());
+        this.handCombinations.Add(new IppatsuCombination());
         foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
             if (entry.type == Tile.TileType.Dragon) {
                 this.handCombinations.Add(new DragonCombination(entry.id));

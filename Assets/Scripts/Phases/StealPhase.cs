@@ -7,7 +7,9 @@ using System.Text;
 public class StealPhase : PhaseNode {
     public StealPhase() : base(PhaseID.Steal) { }
 
-    private List<HandCombination> GetPotentialHandCompletions(Game game, Player player, Tile stolenTile) {
+    private List<HandCombination> GetPotentialHandCompletions(Game game, Player player, Tile _stolenTile) {
+        Tile stolenTile = new Tile(_stolenTile);
+        stolenTile.Owner = player;
         List<Tile> allTiles = new List<Tile>(player.HandZone.Tiles);
         allTiles.AddRange(player.StealZone.Tiles);
         allTiles.Add(stolenTile);

@@ -23,7 +23,7 @@ public class Player {
         get { return this.name; }
     }
 
-    private int score = 25;
+    private int score = 250;
     public int Score {
         get { return this.score; }
     }
@@ -183,7 +183,7 @@ public class Player {
     }
 
     public void ScorePoints(List<HandCombination> handCombs, List<Player> playersToTake) {
-        int score = Game.CalculateScoreFromCombinations(handCombs);
+        int score = Game.CalculateScoreFromCombinations(handCombs, this.isBoss);
 
         playersToTake.ForEach(p => p.score -= (score / playersToTake.Count));
 

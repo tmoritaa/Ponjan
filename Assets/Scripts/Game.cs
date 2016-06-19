@@ -40,19 +40,21 @@ public class Game {
 
     private PhaseNode nextPhaseToForce = null;
 
-    public static int CalculateScoreFromCombinations(List<HandCombination> handCombs) {
+    public static int CalculateScoreFromCombinations(List<HandCombination> handCombs, bool isBoss) {
         int points = 0;
+        int finalScore = 0;
         handCombs.ForEach(h => points += h.Score);
 
-        if (points > 4) {
+        if (points >= 4) {
             points -= 4;
-            points /= 2;
-            points += 4;
+            finalScore += 4 * (((int)(points / 2)) + 1) + 4;
+        } else {
+            finalScore += (int)Math.Pow(2, points - 1);
         }
 
-        points -= 1;
+        int multiplier = (isBoss) ? 15 : 10;
 
-        return (int)Math.Pow(2, points);
+        return finalScore * multiplier;
     }
 
     public void EnqueueDecision(Decision decision) {

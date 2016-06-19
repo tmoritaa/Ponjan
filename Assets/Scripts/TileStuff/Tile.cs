@@ -100,4 +100,13 @@ public class Tile {
         this.type = type;
         this.id = id;
     }
+
+    public Tile(Tile tile) {
+        this.type = tile.type;
+        this.id = tile.id;
+        this.owner = tile.owner;
+        this.stolenPlayer = tile.stolenPlayer;
+        this.zone = tile.zone;
+        this.deckIdx = tile.deckIdx;    
+    }
 }

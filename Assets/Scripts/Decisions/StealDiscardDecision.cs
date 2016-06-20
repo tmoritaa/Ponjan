@@ -31,6 +31,7 @@ public class StealDiscardDecision : Decision {
     }
 
     public override IEnumerator HandleAI() {
-        throw new NotImplementedException();
+        this.HandleUIResponse("Cancel");
+        yield break;
     }
 }

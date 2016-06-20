@@ -37,4 +37,19 @@ public class PickTileOrReachDecision : PickTileDecision {
         this.game.EnqueueUIResponseRequest(new UIResponseRequest(responseType));
         yield break;
     }
+
+    public override IEnumerator HandleAI() {
+        if (!this.controller.HasReached && this.controller.OneAwayFromCompletion()) {
+            this.HandleUIResponse("Reach");
+        } else {
+            IEnumerator enumerator = base.HandleAI();
+            bool hasNext = true;
+            do {
+                hasNext = enumerator.MoveNext();
+                yield return 0;
+            } while (hasNext);
+        }
+        
+        yield break;
+    }
 }

@@ -166,7 +166,7 @@ public class Player {
     }
 
     public Tile GetOddOneOutTile() {
-        Debug.Assert(this.OneAwayFromCompletion(), "Odd one out tile only makes sense when player is cone away from completion");
+        Debug.Assert(this.OneAwayFromCompletion(), "Odd one out tile only makes sense when player is one away from completion");
 
         List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
         allTiles.AddRange(this.stealZone.Tiles);

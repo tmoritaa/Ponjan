@@ -33,6 +33,7 @@ public class PickTileDecision : Decision {
     }
 
     public override IEnumerator HandleAI() {
-        throw new NotImplementedException();
+        this.HandleUIResponse(this.controller.HandZone.Tiles.Last());
+        yield break;
     }
 }

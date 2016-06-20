@@ -37,6 +37,7 @@ public class CompleteHandDecision : Decision {
     }
 
     public override IEnumerator HandleAI() {
-        throw new NotImplementedException();
+        this.HandleUIResponse("Complete");
+        yield break;
     }
 }

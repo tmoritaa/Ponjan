@@ -170,7 +170,7 @@ public class CombatSceneController : MonoBehaviour {
     }
 
     private void Initialize() {
-        this.game.Initialize(4, new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.Human, Player.PlayerType.Human }, new string[] { "Greg", "Fred", "Dred" }, tileSetupData.TileSetups);
+        this.game.Initialize(4, new Player.PlayerType[] { Player.PlayerType.Human, Player.PlayerType.AI, Player.PlayerType.AI }, new string[] { "Greg", "Fred", "Dred" }, tileSetupData.TileSetups);
 
         List<Player> players = this.game.Players;
 

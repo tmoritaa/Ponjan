@@ -28,7 +28,7 @@ public class CompleteHandPhase : PhaseNode {
                 game.EnqueueDecision(new DisplayCompletedHandDecision(activePlayer, game, validCombs));
                 yield return 0;
 
-                game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseID.Endgame));
+                game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseID.EndRound));
             }
         }
 

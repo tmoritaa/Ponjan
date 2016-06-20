@@ -144,28 +144,28 @@ public class Game {
             }
         }
 
-        PhaseNode gameStartPhase = new GameStartPhase();
+        PhaseNode roundStartPhase = new RoundStartPhase();
         PhaseNode drawPhase = new DrawPhase();
         PhaseNode completeHandPhase = new CompleteHandPhase();
         PhaseNode discardPhase = new DiscardPhase();
         PhaseNode stealPhase = new StealPhase();
         PhaseNode changeActivePlayerPhase = new ChangeActivePlayerPhase();
-        PhaseNode gameEndPhase = new GameEndPhase();
+        PhaseNode roundEndPhase = new RoundEndPhase();
 
-        gameStartPhase.Next = drawPhase;
+        roundStartPhase.Next = drawPhase;
         drawPhase.Next = completeHandPhase;
         completeHandPhase.Next = discardPhase;
         discardPhase.Next = stealPhase;
         stealPhase.Next = changeActivePlayerPhase;
         changeActivePlayerPhase.Next = drawPhase;
 
-        this.phaseNodes[gameStartPhase.PhaseId] = gameStartPhase;
+        this.phaseNodes[roundStartPhase.PhaseId] = roundStartPhase;
         this.phaseNodes[drawPhase.PhaseId] = drawPhase;
         this.phaseNodes[completeHandPhase.PhaseId] = completeHandPhase;
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
         this.phaseNodes[stealPhase.PhaseId] = stealPhase;
         this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;
-        this.phaseNodes[gameEndPhase.PhaseId] = gameEndPhase;
+        this.phaseNodes[roundEndPhase.PhaseId] = roundEndPhase;
 
         this.handCombinations.Add(new AllSameColorCombination());
         this.handCombinations.Add(new AllSameCombination());
@@ -197,7 +197,7 @@ public class Game {
     }
 
     public void StartNewRound() {
-        this.curPhase = this.phaseNodes[PhaseNode.PhaseID.StartGame];
+        this.curPhase = this.phaseNodes[PhaseNode.PhaseID.StartRound];
         this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
 
         this.mainGameLoop = this.Resume();

@@ -14,7 +14,7 @@ public class ChangeActivePlayerPhase : PhaseNode {
             game.EnqueueDecision(new DisplayNoDeckScoringDecision(game));
             yield return 0;
 
-            game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseID.Endgame));
+            game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseID.EndRound));
         } else {
             List<Player> players = game.Players;
             Player curActivePlayer = players.Find(p => p.IsActive);

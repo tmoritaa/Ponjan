@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class GameStartPhase : PhaseNode {
-    public GameStartPhase() : base(PhaseID.StartGame) { }
+public class RoundStartPhase : PhaseNode {
+    public RoundStartPhase() : base(PhaseID.StartRound) { }
 
     public override IEnumerator PerformPhase(Game game) {
         List<Player> players = game.Players;

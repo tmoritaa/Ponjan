@@ -5,13 +5,13 @@ using System.Linq;
 
 public abstract class PhaseNode {
     public enum PhaseID {
-        StartGame,
+        StartRound,
         Draw,
         CompleteHand,
         Discard,
         Steal,
         ChangeActivePlayer,
-        Endgame,
+        EndRound,
     };
     
     protected PhaseID phaseId;

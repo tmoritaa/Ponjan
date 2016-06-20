@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class GameEndPhase : PhaseNode { 
-    public GameEndPhase() : base(PhaseNode.PhaseID.Endgame) { }
+public class RoundEndPhase : PhaseNode { 
+    public RoundEndPhase() : base(PhaseNode.PhaseID.EndRound) { }
 
     public override IEnumerator PerformPhase(Game game) {
         if (game.CurRound >= game.NumberOfRounds) {

@@ -37,8 +37,9 @@ public class StealPhase : PhaseNode {
 
         Queue<Player> requestOrder = new Queue<Player>();
         int playerCount = game.Players.Count;
+        int priorityPlayerCount = stealPriorityOrder.Count;
         List<HandCombination>[] validCombsPerPlayer = new List<HandCombination>[playerCount];
-        for (int i = 0; i < playerCount; ++i) {
+        for (int i = 0; i < priorityPlayerCount; ++i) {
             Player player = stealPriorityOrder.Dequeue();
 
             List<HandCombination> validCombs = this.GetPotentialHandCompletions(game, player, stealableTile);
@@ -55,8 +56,9 @@ public class StealPhase : PhaseNode {
             requestOrder.Enqueue(stealPriorityOrder.Dequeue());
         }
 
-        
-        foreach (Player player in requestOrder) {
+        while (requestOrder.Count > 0) {
+            Player player = requestOrder.Dequeue();
+
             List<HandCombination> validCombs = validCombsPerPlayer[player.Id];
 
             if (validCombs.Count > 0) {
@@ -68,11 +70,11 @@ public class StealPhase : PhaseNode {
 
                 if (resp.Equals("Complete")) {
                     player.StealTileForCompletion(stealableTile, activePlayer);
-                    player.ScorePoints(validCombs, new List<Player>() { activePlayer });
+                    player.ScorePointsWithHandComb(validCombs, new List<Player>() { activePlayer });
                     game.EnqueueDecision(new DisplayCompletedHandDecision(player, game, validCombs));
                     yield return 0;
 
-                    game.GameComplete = true;
+                    game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseID.Endgame));
 
                     break;
                 }

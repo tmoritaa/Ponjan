@@ -10,11 +10,11 @@ public class ChangeActivePlayerPhase : PhaseNode {
     public override IEnumerator PerformPhase(Game game) {
         if (game.Deck.Tiles.Count <= 0) {
             List<int> scoreChangePerPlayer = Game.CalculateScoreForNoDeck(game.Players);
-            game.Players.ForEach(p => p.Score += scoreChangePerPlayer[p.Id]);
+            game.Players.ForEach(p => p.ModifyPoints(scoreChangePerPlayer[p.Id]));
             game.EnqueueDecision(new DisplayNoDeckScoringDecision(game));
             yield return 0;
 
-            game.GameComplete = true;
+            game.EnqueueCommand(new ChangeNextPhaseCommand(PhaseID.Endgame));
         } else {
             List<Player> players = game.Players;
             Player curActivePlayer = players.Find(p => p.IsActive);

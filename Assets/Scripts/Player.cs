@@ -26,7 +26,6 @@ public class Player {
     private int score = 250;
     public int Score {
         get { return this.score; }
-        set { this.score = value; }
     }
 
     private bool isBoss = false;
@@ -66,6 +65,11 @@ public class Player {
     private StealZone stealZone = new StealZone();
     public StealZone StealZone {
         get { return this.stealZone; }
+    }
+
+    private bool scoredThisRound = false;
+    public bool ScoredThisRound {
+        get { return this.scoredThisRound; }
     }
 
     public Player(PlayerType pType, int id, string name) {
@@ -188,10 +192,18 @@ public class Player {
         return allTiles[0];
     }
 
-    public void ScorePoints(List<HandCombination> handCombs, List<Player> playersToTake) {
+    public void ScorePointsWithHandComb(List<HandCombination> handCombs, List<Player> playersToTake) {
         int score = Game.CalculateScoreFromCombinations(handCombs, this.isBoss);
 
-        playersToTake.ForEach(p => p.score -= (score / playersToTake.Count));
+        playersToTake.ForEach(p => p.ModifyPoints(-score / playersToTake.Count));
+
+        this.ModifyPoints(score);
+    }
+
+    public void ModifyPoints(int score) {
+        if (score > 0) {
+            this.scoredThisRound = true;
+        }
 
         this.score += score;
     }
@@ -208,5 +220,7 @@ public class Player {
 
         this.isActive = false;
         this.hasReached = false;
+        this.ippatsuPotential = false;
+        this.scoredThisRound = false;
     }
 }

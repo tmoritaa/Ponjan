@@ -11,6 +11,7 @@ public abstract class PhaseNode {
         Discard,
         Steal,
         ChangeActivePlayer,
+        Endgame,
     };
     
     protected PhaseID phaseId;

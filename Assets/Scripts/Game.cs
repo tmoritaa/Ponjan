@@ -39,11 +39,7 @@ public class Game {
     private int curRound = 0;
     public int CurRound {
         get { return this.curRound; }
-    }
-
-    private bool gameComplete = false;
-    public bool GameComplete {
-        set { this.gameComplete = value; }
+        set { this.curRound = value; }
     }
 
     private PhaseNode nextPhaseToForce = null;
@@ -68,7 +64,7 @@ public class Game {
         const int BASE_POINTS = 30;
         foreach (Player player in players) {
             if (playersTenpai.Exists(p => p == player)) {
-                scoreChangePerPlayer[player.Id] = BASE_POINTS / playersNoTenpai.Count;
+                scoreChangePerPlayer[player.Id] = BASE_POINTS / playersTenpai.Count;
             } else {
                 scoreChangePerPlayer[player.Id] = -BASE_POINTS / playersNoTenpai.Count;
             } 
@@ -132,12 +128,14 @@ public class Game {
 
     public void Initialize(int numRounds, Player.PlayerType[] playerTypes, string[] names, List<TileSetupData.TileSetupEntry> tileSetupEntries) {
         this.numberOfRounds = numRounds;
-        this.curRound = 0;
+        this.curRound = 1;
 
         for (int i = 0; i < playerTypes.Length; ++i) {
             Player player = new Player(playerTypes[i], i, names[i]);
             this.players.Add(player);
         }
+
+        this.players[UnityEngine.Random.Range(0, this.players.Count)].IsBoss = true;
 
         foreach(TileSetupData.TileSetupEntry setupEntry in tileSetupEntries) {
             for(int i = 0; i < setupEntry.numberInDeck; ++i) {
@@ -152,6 +150,7 @@ public class Game {
         PhaseNode discardPhase = new DiscardPhase();
         PhaseNode stealPhase = new StealPhase();
         PhaseNode changeActivePlayerPhase = new ChangeActivePlayerPhase();
+        PhaseNode gameEndPhase = new GameEndPhase();
 
         gameStartPhase.Next = drawPhase;
         drawPhase.Next = completeHandPhase;
@@ -166,6 +165,7 @@ public class Game {
         this.phaseNodes[discardPhase.PhaseId] = discardPhase;
         this.phaseNodes[stealPhase.PhaseId] = stealPhase;
         this.phaseNodes[changeActivePlayerPhase.PhaseId] = changeActivePlayerPhase;
+        this.phaseNodes[gameEndPhase.PhaseId] = gameEndPhase;
 
         this.handCombinations.Add(new AllSameColorCombination());
         this.handCombinations.Add(new AllSameCombination());
@@ -191,7 +191,6 @@ public class Game {
         this.uiResponseRequests.Clear();
         this.uiUpdateRequests.Clear();
         this.decisionWaitingResponse = null;
-        this.gameComplete = false;
         this.Deck.ResetTiles();
 
         this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.Reset));
@@ -200,8 +199,6 @@ public class Game {
     public void StartNewRound() {
         this.curPhase = this.phaseNodes[PhaseNode.PhaseID.StartGame];
         this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
-
-        this.curRound += 1;
 
         this.mainGameLoop = this.Resume();
         this.ContinueMainGameLoop();
@@ -221,7 +218,7 @@ public class Game {
     }
 
     public IEnumerator Resume() {
-        while (!this.gameComplete) {
+        while (this.curPhase != null) {
             bool phaseStillProc = this.curPhaseEnumerator.MoveNext();
 
             // Let frontend process all game requests.
@@ -261,7 +258,10 @@ public class Game {
                     this.curPhase = this.curPhase.Next;
                 }
                 
-                this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
+                if (curPhase != null) {
+                    this.curPhaseEnumerator = this.curPhase.PerformPhase(this);
+                }
+
                 this.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.UpdateBoard));
                 yield return 0;
             }

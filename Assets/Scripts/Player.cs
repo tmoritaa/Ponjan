@@ -207,7 +207,6 @@ public class Player {
         stealTiles.ForEach(t => game.Deck.AddTile(t));
 
         this.isActive = false;
-        this.isBoss = false;
         this.hasReached = false;
     }
 }

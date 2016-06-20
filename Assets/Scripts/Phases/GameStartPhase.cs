@@ -10,9 +10,19 @@ public class GameStartPhase : PhaseNode {
     public override IEnumerator PerformPhase(Game game) {
         List<Player> players = game.Players;
 
-        // TODO: should be random.
-        players[0].IsBoss = true;
-        players[0].IsActive = true;
+        if (game.CurRound == 1) {
+            int playerIdx = UnityEngine.Random.Range(0, players.Count);
+            players[playerIdx].IsBoss = true;
+            players[playerIdx].IsActive = true;
+        } else {
+            Player prevBossPlayer = players.Find(p => p.IsBoss);
+            prevBossPlayer.IsBoss = false;
+
+            int nextBossPlayerIdx = (prevBossPlayer.Id + 1) % players.Count;
+            players[nextBossPlayerIdx].IsBoss = true;
+            players[nextBossPlayerIdx].IsActive = true;
+
+        }
 
         game.Deck.Shuffle();
 

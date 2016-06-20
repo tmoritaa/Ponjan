@@ -98,7 +98,7 @@ public class CombatSceneController : MonoBehaviour {
                     break;
                 case UIUpdateRequest.UpdateType.UpdateBoard:
                     this.playerZones.ForEach(z => z.UpdateZones(this.game));
-                    this.scoreDisplayGO.UpdateText(this.game.Players);
+                    this.scoreDisplayGO.UpdateText(this.game.Players, this.game.CurRound);
                     break;
                 case UIUpdateRequest.UpdateType.Reset:
                     this.Reset();

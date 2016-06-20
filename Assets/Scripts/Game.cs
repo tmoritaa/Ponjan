@@ -32,7 +32,15 @@ public class Game {
     }
 
     private int numberOfRounds = 0;
+    public int NumberOfRounds {
+        get { return this.numberOfRounds; }
+    }
+
     private int curRound = 0;
+    public int CurRound {
+        get { return this.curRound; }
+    }
+
     private bool gameComplete = false;
     public bool GameComplete {
         set { this.gameComplete = value; }

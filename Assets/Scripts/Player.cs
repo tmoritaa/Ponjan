@@ -149,20 +149,7 @@ public class Player {
         List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
         allTiles.AddRange(this.stealZone.Tiles);
 
-        List<Tile> sets = Tile.ReturnGroupedTiles(allTiles);
-
-        if (sets.Count != 2) {
-            return false;
-        }
-
-        foreach (Tile tile in sets) {
-            for (int i = 0; i < CombatSceneController.SetSize; ++i) {
-                allTiles.Remove(allTiles.Find(t => t.IsSame(tile)));
-            }
-        }
-
-        List<Tile> pair = Tile.ReturnGroupedTiles(allTiles, CombatSceneController.SetSize - 1);
-        return pair.Count == 1;
+        return Tile.GetNumberOfTilesToCompleteHand(allTiles) == 1;
     }
 
     public Tile GetOddOneOutTile() {
@@ -192,6 +179,13 @@ public class Player {
         return allTiles[0];
     }
 
+    public int GetNumTilesLeftForCompletion() {
+        List<Tile> allTiles = new List<Tile>(this.handZone.Tiles);
+        allTiles.AddRange(this.stealZone.Tiles);
+
+        return Tile.GetNumberOfTilesToCompleteHand(allTiles);
+    }
+
     public void ScorePointsWithHandComb(List<HandCombination> handCombs, List<Player> playersToTake) {
         int score = Game.CalculateScoreFromCombinations(handCombs, this.isBoss);
 
@@ -206,6 +200,20 @@ public class Player {
         }
 
         this.score += score;
+    }
+
+    public Tile AIPickTileToDiscard(List<HandCombination> handCombs) {
+        UnityEngine.Debug.Log("Player " + this.id);
+
+        List<Tile> allTiles = new List<Tile>(this.HandZone.Tiles);
+        allTiles.AddRange(this.StealZone.Tiles);
+
+        foreach(HandCombination comb in handCombs) {
+            int num = comb.ReturnNumTilesToComplete(allTiles);
+            UnityEngine.Debug.Log(comb.Name + " " + num);
+        }
+
+        return this.HandZone.Tiles.Last();
     }
 
     public void Reset(Game game) {

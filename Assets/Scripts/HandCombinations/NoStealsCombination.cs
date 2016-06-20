@@ -18,4 +18,8 @@ public class NoStealsCombination : HandCombination {
 
         return valid;
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        return 100;
+    }
 }

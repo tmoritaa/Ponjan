@@ -12,6 +12,9 @@ public class Game {
     private IEnumerator mainGameLoop;
 
     private List<HandCombination> handCombinations = new List<HandCombination>();
+    public List<HandCombination> HandCombinations {
+        get { return this.handCombinations; }
+    }
 
     private List<Player> players = new List<Player>();
     public List<Player> Players {

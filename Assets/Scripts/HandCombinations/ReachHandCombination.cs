@@ -13,4 +13,8 @@ public class ReachHandCombination : HandCombination {
 
         return sets.Count == 3 && player.HasReached;
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        return Tile.GetNumberOfTilesToCompleteHand(tiles);
+    }
 }

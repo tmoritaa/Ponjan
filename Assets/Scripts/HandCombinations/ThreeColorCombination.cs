@@ -14,4 +14,12 @@ public class ThreeColorCombination : HandCombination {
             sets.Exists(t => t.Type == Tile.TileType.Blue) && 
             sets.Exists(t => t.Type == Tile.TileType.Yellow));
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        int redNum = CombatSceneController.SetSize - Math.Min(Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Red), CombatSceneController.SetSize);
+        int blueNum = CombatSceneController.SetSize - Math.Min(Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Blue), CombatSceneController.SetSize);
+        int yellowNum = CombatSceneController.SetSize - Math.Min(Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Yellow), CombatSceneController.SetSize);
+
+        return redNum + blueNum + yellowNum;
+    }
 }

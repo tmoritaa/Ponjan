@@ -33,7 +33,7 @@ public class PickTileDecision : Decision {
     }
 
     public override IEnumerator HandleAI() {
-        this.HandleUIResponse(this.controller.HandZone.Tiles.Last());
+        this.HandleUIResponse(this.controller.AIPickTileToDiscard(game.HandCombinations));
         yield break;
     }
 }

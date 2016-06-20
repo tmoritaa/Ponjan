@@ -18,4 +18,18 @@ public class AllSameIdCombination : HandCombination {
 
         return valid;
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        int num = 99;
+        for (int i = 0; i < 2; ++i) {
+            List<Tile> tilesWithId = tiles.FindAll(t => t.Id == i);
+
+            int count = Tile.GetNumberOfTilesToCompleteHand(tilesWithId);
+            if (count < num) {
+                num = count;
+            }
+        }
+
+        return num;
+    }
 }

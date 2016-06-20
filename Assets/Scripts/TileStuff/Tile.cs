@@ -68,23 +68,28 @@ public class Tile {
         List<Tile> tiles = new List<Tile>(_tiles);
         List<Tile> sets = new List<Tile>();
 
+        if (tiles.Count == 0) {
+            return sets;
+        }
+
         tiles.Sort(Tile.CompareTiles);
 
         int counter = 1;
-        Tile curTile = tiles[0];
-        for (int i = 1; i < tiles.Count; ++i) {
+        Tile curTile = null;
+        for (int i = 0; i < tiles.Count; ++i) {
             if (curTile == null) {
                 curTile = tiles[i];
                 counter = 1;
-                continue;
             }
 
             Tile tile = tiles[i];
-            if (curTile.IsSame(tile)) {
-                ++counter;
-            } else {
-                counter = 1;
-                curTile = tile;
+            if (tile != curTile) {
+                if (curTile.IsSame(tile)) {
+                    ++counter;
+                } else {
+                    counter = 1;
+                    curTile = tile;
+                }
             }
 
             if (counter == groupNum) {
@@ -94,6 +99,75 @@ public class Tile {
         }
 
         return sets;
+    }
+
+    public static int GetHighestNumOfSameTilesOfType(List<Tile> _tiles, Tile.TileType type) {
+        List<Tile> tiles = new List<Tile>(_tiles);
+
+        List<Tile> typeTiles = tiles.FindAll(t => t.type == type);
+
+        int count = CombatSceneController.MaxPlayerHandSize;
+
+        for(int g = CombatSceneController.MaxPlayerHandSize; g > 0; --g, --count) {
+            List<Tile> sets = Tile.ReturnGroupedTiles(typeTiles, g);
+
+            if (sets.Count > 0) {
+                return count;
+            }
+        }
+
+        return count;
+    }
+    
+    public static int GetNumberOfTilesToCompleteHand(List<Tile> _tiles) {
+        int tilesNeeded = 0;
+        int numNeededSetsLeft = CombatSceneController.SetSize;
+        List<Tile> tiles = new List<Tile>(_tiles);
+
+        List<Tile> sets = Tile.ReturnGroupedTiles(tiles, 3);
+        numNeededSetsLeft -= sets.Count;
+        //Debug.Log("set num " + sets.Count);
+
+        if (numNeededSetsLeft <= 0) {
+            return Math.Max(0, tilesNeeded);
+        }
+
+        // Remove all sets from searching tiles.
+        foreach (Tile tile in sets) {
+            for (int i = 0; i < 3; ++i) {
+                tiles.Remove(tiles.Find(t => t.IsSame(tile)));
+            }
+        }
+
+        List<Tile> pairs = Tile.ReturnGroupedTiles(tiles, 2);
+
+        //Debug.Log("pair num " + pairs.Count);
+        tilesNeeded += Math.Min(numNeededSetsLeft, pairs.Count) * 1;
+        numNeededSetsLeft -= pairs.Count;
+
+        if (numNeededSetsLeft <= 0) {
+            return Math.Max(0, tilesNeeded);
+        }
+
+        // Remove all pairs from searching tiles.
+        foreach (Tile tile in pairs) {
+            for (int i = 0; i < 2; ++i) {
+                tiles.Remove(tiles.Find(t => t.IsSame(tile)));
+            }
+        }
+
+        List<Tile> singles = Tile.ReturnGroupedTiles(tiles, 1);
+        //Debug.Log("singles num " + singles.Count);
+        tilesNeeded += Math.Min(numNeededSetsLeft, singles.Count) * 2;
+        numNeededSetsLeft -= singles.Count;
+
+        //Debug.Log("sets left " + numNeededSetsLeft);
+
+        if (numNeededSetsLeft > 0) {
+            tilesNeeded += numNeededSetsLeft * 3;
+        }
+
+        return tilesNeeded;
     } 
 
     public Tile(TileType type, int id) {

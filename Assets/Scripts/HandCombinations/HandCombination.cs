@@ -25,4 +25,6 @@ public abstract class HandCombination {
     }
 
     public abstract bool HandHasCombination(List<Tile> tiles, CompletionType compType);
+
+    public abstract int ReturnNumTilesToComplete(List<Tile> tiles);
 }

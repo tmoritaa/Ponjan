@@ -35,4 +35,16 @@ public class TwoIdenticalCombination : HandCombination {
 
         return valid;
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        int highestRed = Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Red);
+        int highestBlue = Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Blue);
+        int highestYellow = Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Yellow);
+
+        int max = Math.Max(Math.Max(highestRed, highestBlue), highestYellow);
+
+        int identicalSize = CombatSceneController.SetSize * 2;
+
+        return identicalSize - Math.Min(max, identicalSize);
+    }
 }

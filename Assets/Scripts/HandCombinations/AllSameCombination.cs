@@ -28,4 +28,22 @@ public class AllSameCombination : HandCombination {
 
         return valid;
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        List<Tile> tileTypes = Tile.ReturnGroupedTiles(tiles, 1);
+
+        int num = 0;
+        foreach(Tile tile in tileTypes) {
+            if (tile.Type == Tile.TileType.Dragon || tile.Type == Tile.TileType.White) {
+                continue;
+            }
+
+            int count = tiles.FindAll(t => t.IsSame(tile)).Count;
+            if (count > num) {
+                num = count;
+            }
+        }
+
+        return CombatSceneController.MaxPlayerHandSize - num;
+    }
 }

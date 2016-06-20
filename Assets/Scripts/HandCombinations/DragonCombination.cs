@@ -6,7 +6,7 @@ using System.Text;
 public class DragonCombination : HandCombination {
     private int id;
 
-    public DragonCombination(int id) : base("Dragon", 1) {
+    public DragonCombination(int id) : base("Dragon " + id, 1) {
         this.id = id;
     }
 
@@ -18,5 +18,13 @@ public class DragonCombination : HandCombination {
         bool valid = sets.Count == 3 && exists;
 
         return valid;
+    }
+    
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        List<Tile> dragonTiles = tiles.FindAll(t => t.Type == Tile.TileType.Dragon);
+
+        int count = dragonTiles.FindAll(t => t.Id == this.id).Count;
+
+        return CombatSceneController.SetSize - count;
     }
 }

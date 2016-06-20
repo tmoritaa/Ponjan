@@ -21,4 +21,23 @@ public class OneColorAndWhitesCombination : HandCombination {
 
         return valid;
     }
+
+    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+        List<Tile> redTiles = tiles.FindAll(t => t.Type == Tile.TileType.Red);
+        List<Tile> blueTiles = tiles.FindAll(t => t.Type == Tile.TileType.Blue);
+        List<Tile> yellowTiles = tiles.FindAll(t => t.Type == Tile.TileType.Yellow);
+        List<Tile> otherTiles = tiles.FindAll(t => t.Type == Tile.TileType.White || t.Type == Tile.TileType.Dragon);
+
+        redTiles.AddRange(otherTiles);
+        blueTiles.AddRange(otherTiles);
+        yellowTiles.AddRange(otherTiles);
+
+        int redNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(redTiles);
+        int blueNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(blueTiles);
+        int yellowNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(yellowTiles);
+
+        int minCount = Math.Min(Math.Min(redNeededTileNum, blueNeededTileNum), yellowNeededTileNum);
+
+        return minCount;
+    }
 }

@@ -51,6 +51,8 @@ public class CombatSceneController : MonoBehaviour {
     RoundResultsScreen roundResultsScreen;
     [SerializeField]
     ScoreDisplayGO scoreDisplayGO;
+    [SerializeField]
+    GameResultsScreen gameResultsScreen;
 
     bool gameInProgress = false;
 
@@ -102,6 +104,10 @@ public class CombatSceneController : MonoBehaviour {
                     break;
                 case UIUpdateRequest.UpdateType.Reset:
                     this.Reset();
+                    break;
+                case UIUpdateRequest.UpdateType.DisplayFinalResults:
+                    this.gameResultsScreen.DisplayFinalResults(this.game.Players);
+                    this.gameResultsScreen.gameObject.SetActive(true);
                     break;
             }
         }
@@ -179,6 +185,7 @@ public class CombatSceneController : MonoBehaviour {
             this.playerZones[i].Initialize(players[i]);
         }
 
+        this.gameResultsScreen.gameObject.SetActive(false);
         this.roundResultsScreen.gameObject.SetActive(false);
         this.completeHandButtons.gameObject.SetActive(false);
         this.stealTileButtons.gameObject.SetActive(false);

@@ -8,6 +8,7 @@ public class UIUpdateRequest {
         None,
         UpdateBoard,
         Reset,
+        DisplayFinalResults,
     }
 
     public UpdateType requestType = UpdateType.None;

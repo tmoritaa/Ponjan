@@ -8,17 +8,21 @@ public class GameEndPhase : PhaseNode {
     public GameEndPhase() : base(PhaseNode.PhaseID.Endgame) { }
 
     public override IEnumerator PerformPhase(Game game) {
-        List<Player> players = game.Players;
+        if (game.CurRound >= game.NumberOfRounds) {
+            game.EnqueueUIUpdateRequest(new UIUpdateRequest(UIUpdateRequest.UpdateType.DisplayFinalResults));
+        } else {
+            List<Player> players = game.Players;
 
-        Player prevBossPlayer = players.Find(p => p.IsBoss);
+            Player prevBossPlayer = players.Find(p => p.IsBoss);
 
-        if (!prevBossPlayer.ScoredThisRound) {
-            prevBossPlayer.IsBoss = false;
+            if (!prevBossPlayer.ScoredThisRound) {
+                prevBossPlayer.IsBoss = false;
 
-            int nextBossPlayerIdx = (prevBossPlayer.Id + 1) % players.Count;
-            players[nextBossPlayerIdx].IsBoss = true;
+                int nextBossPlayerIdx = (prevBossPlayer.Id + 1) % players.Count;
+                players[nextBossPlayerIdx].IsBoss = true;
 
-            game.CurRound += 1;
+                game.CurRound += 1;
+            }
         }
 
         yield break;

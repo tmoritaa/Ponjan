@@ -12,7 +12,8 @@ public class CompleteWithDrawCombination : HandCombination {
         return sets.Count == 3 && compType == CompletionType.Draw;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
+        outUnnecessaryTiles = new List<Tile>();
         // Just a big number.
         return 100;
     }

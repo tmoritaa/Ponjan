@@ -19,7 +19,8 @@ public class NoStealsCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
+        outUnnecessaryTiles = new List<Tile>();
         return 100;
     }
 }

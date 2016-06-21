@@ -14,7 +14,8 @@ public class IppatsuCombination : HandCombination {
         return sets.Count == 3 && player.IppatsuPotential;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
+        outUnnecessaryTiles = new List<Tile>();
         return 100;
     }
 }

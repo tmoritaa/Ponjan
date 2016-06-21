@@ -207,10 +207,16 @@ public class Player {
 
         List<Tile> allTiles = new List<Tile>(this.HandZone.Tiles);
         allTiles.AddRange(this.StealZone.Tiles);
+        allTiles.Sort(Tile.CompareTiles);
 
         foreach(HandCombination comb in handCombs) {
-            int num = comb.ReturnNumTilesToComplete(allTiles);
-            UnityEngine.Debug.Log(comb.Name + " " + num);
+            List<Tile> unnecTiles = new List<Tile>();
+            int num = comb.ReturnNumTilesToComplete(allTiles, out unnecTiles);
+            string str = comb.Name + " " + num;
+            foreach(Tile tile in unnecTiles) {
+                str += "\n" + tile.Type + " " + tile.Id;
+            }
+            UnityEngine.Debug.Log(str);
         }
 
         return this.HandZone.Tiles.Last();

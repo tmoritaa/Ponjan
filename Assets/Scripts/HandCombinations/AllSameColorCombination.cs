@@ -22,7 +22,9 @@ public class AllSameColorCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+    public override int ReturnNumTilesToComplete(List<Tile> _tiles, out List<Tile> outUnnecessaryTiles) {
+        List<Tile> tiles = new List<Tile>(_tiles);
+
         List<Tile> redTiles = tiles.FindAll(t => t.Type == Tile.TileType.Red);
         List<Tile> blueTiles = tiles.FindAll(t => t.Type == Tile.TileType.Blue);
         List<Tile> yellowTiles = tiles.FindAll(t => t.Type == Tile.TileType.Yellow);
@@ -33,7 +35,38 @@ public class AllSameColorCombination : HandCombination {
         int yellowNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(yellowTiles);
         int whiteNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(whiteTiles);
 
-        int minCount = Math.Min(Math.Min(Math.Min(redNeededTileNum, blueNeededTileNum), yellowNeededTileNum), whiteNeededTileNum);
+        Tile.TileType[] tileTypes = new Tile.TileType[4] { Tile.TileType.Red, Tile.TileType.Blue, Tile.TileType.Yellow, Tile.TileType.White };
+        int[] neededTilePerNum = new int[4] { redNeededTileNum, blueNeededTileNum, yellowNeededTileNum, whiteNeededTileNum };
+
+        List<Tile.TileType> minTypes = new List<Tile.TileType>();
+        int minCount = 999;
+        for (int i = 0; i < 4; ++i) {
+            int tileNum = neededTilePerNum[i];
+            if (tileNum <= minCount) {
+                if (tileNum < minCount) {
+                    minTypes.Clear();
+                    minCount = tileNum;
+                }
+                
+                minTypes.Add(tileTypes[i]);
+            }
+        }
+
+        List<Tile> unnecessaryTiles = new List<Tile>();
+        foreach (Tile tile in tiles) {
+            bool unnecessary = true;
+            foreach (Tile.TileType type in minTypes) {
+                if (tile.Type == type) {
+                    unnecessary = false;
+                    break;
+                }
+            }
+
+            if (unnecessary) {
+                unnecessaryTiles.Add(tile);
+            }
+        }
+        outUnnecessaryTiles = unnecessaryTiles;
 
         return minCount;
     }

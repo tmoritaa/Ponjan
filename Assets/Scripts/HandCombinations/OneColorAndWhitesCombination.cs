@@ -22,7 +22,7 @@ public class OneColorAndWhitesCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
         List<Tile> redTiles = tiles.FindAll(t => t.Type == Tile.TileType.Red);
         List<Tile> blueTiles = tiles.FindAll(t => t.Type == Tile.TileType.Blue);
         List<Tile> yellowTiles = tiles.FindAll(t => t.Type == Tile.TileType.Yellow);
@@ -36,7 +36,38 @@ public class OneColorAndWhitesCombination : HandCombination {
         int blueNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(blueTiles);
         int yellowNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(yellowTiles);
 
-        int minCount = Math.Min(Math.Min(redNeededTileNum, blueNeededTileNum), yellowNeededTileNum);
+        Tile.TileType[] tileTypes = new Tile.TileType[3] { Tile.TileType.Red, Tile.TileType.Blue, Tile.TileType.Yellow };
+        int[] neededTilePerNum = new int[3] { redNeededTileNum, blueNeededTileNum, yellowNeededTileNum };
+
+        List<Tile.TileType> minTypes = new List<Tile.TileType>();
+        int minCount = 999;
+        for (int i = 0; i < 3; ++i) {
+            int tileNum = neededTilePerNum[i];
+            if (tileNum <= minCount) {
+                if (tileNum < minCount) {
+                    minTypes.Clear();
+                    minCount = tileNum;
+                }
+
+                minTypes.Add(tileTypes[i]);
+            }
+        }
+
+        List<Tile> unnecessaryTiles = new List<Tile>();
+        foreach (Tile tile in tiles) {
+            bool unnecessary = true;
+            foreach (Tile.TileType type in minTypes) {
+                if (tile.Type == type || tile.Type == Tile.TileType.White || tile.Type == Tile.TileType.Dragon) {
+                    unnecessary = false;
+                    break;
+                }
+            }
+
+            if (unnecessary) {
+                unnecessaryTiles.Add(tile);
+            }
+        }
+        outUnnecessaryTiles = unnecessaryTiles;
 
         return minCount;
     }

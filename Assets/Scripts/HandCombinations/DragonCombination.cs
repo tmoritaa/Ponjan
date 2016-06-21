@@ -19,12 +19,13 @@ public class DragonCombination : HandCombination {
 
         return valid;
     }
-    
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
-        List<Tile> dragonTiles = tiles.FindAll(t => t.Type == Tile.TileType.Dragon);
 
-        int count = dragonTiles.FindAll(t => t.Id == this.id).Count;
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
+        List<Tile> dragonTiles = tiles.FindAll(t => t.Type == Tile.TileType.Dragon && t.Id == this.id);
 
+        int count = dragonTiles.Count;
+
+        outUnnecessaryTiles = tiles.FindAll(t => t.Type != Tile.TileType.Dragon || t.Id != this.id);
         return CombatSceneController.SetSize - count;
     }
 }

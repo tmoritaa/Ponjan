@@ -52,6 +52,10 @@ public class Tile {
     }
 
     public bool IsSame(Tile tile) {
+        if (tile == null) {
+            return false;
+        }
+
         return (this.type == tile.type && this.id == tile.id);
     }
 
@@ -101,7 +105,7 @@ public class Tile {
         return sets;
     }
 
-    public static int GetHighestNumOfSameTilesOfType(List<Tile> _tiles, Tile.TileType type) {
+    public static int GetHighestNumOfSameTilesOfType(List<Tile> _tiles, Tile.TileType type, out List<Tile> outMostDuplicateTiles) {
         List<Tile> tiles = new List<Tile>(_tiles);
 
         List<Tile> typeTiles = tiles.FindAll(t => t.type == type);
@@ -112,11 +116,24 @@ public class Tile {
             List<Tile> sets = Tile.ReturnGroupedTiles(typeTiles, g);
 
             if (sets.Count > 0) {
+                outMostDuplicateTiles = sets;
                 return count;
             }
         }
 
+        outMostDuplicateTiles = new List<Tile>();
         return count;
+    }
+
+    public static List<Tile> ReturnTilesWithoutDuplicates(List<Tile> tiles) {
+        List<Tile> outList = new List<Tile>();
+        foreach (Tile tile in tiles) {
+            if (!outList.Exists(t => t.IsSame(tile))) {
+                outList.Add(tile);
+            }
+        }
+
+        return outList;
     }
     
     public static int GetNumberOfTilesToCompleteHand(List<Tile> _tiles) {
@@ -156,7 +173,7 @@ public class Tile {
             }
         }
 
-        List<Tile> singles = Tile.ReturnGroupedTiles(tiles, 1);
+        List<Tile> singles = Tile.ReturnTilesWithoutDuplicates(tiles);
         //Debug.Log("singles num " + singles.Count);
         tilesNeeded += Math.Min(numNeededSetsLeft, singles.Count) * 2;
         numNeededSetsLeft -= singles.Count;

@@ -29,20 +29,42 @@ public class AllSameCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
-        List<Tile> tileTypes = Tile.ReturnGroupedTiles(tiles, 1);
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
+        List<Tile> tileTypes = Tile.ReturnTilesWithoutDuplicates(tiles);
 
         int num = 0;
+        List<Tile> bestTiles = new List<Tile>();
         foreach(Tile tile in tileTypes) {
             if (tile.Type == Tile.TileType.Dragon || tile.Type == Tile.TileType.White) {
                 continue;
             }
 
             int count = tiles.FindAll(t => t.IsSame(tile)).Count;
-            if (count > num) {
-                num = count;
+            if (count >= num) {
+                if (count > num) {
+                    bestTiles.Clear();
+                    num = count;
+                }
+
+                bestTiles.Add(tile);
             }
         }
+
+        List<Tile> unnecessaryTiles = new List<Tile>();
+        foreach (Tile tile in tiles) {
+            bool unnecessary = true;
+            foreach (Tile bestTile in bestTiles) {
+                if (bestTile.IsSame(tile)) {
+                    unnecessary = false;
+                    break;
+                }
+            }
+
+            if (unnecessary) {
+                unnecessaryTiles.Add(tile);
+            }
+        }
+        outUnnecessaryTiles = unnecessaryTiles;
 
         return CombatSceneController.MaxPlayerHandSize - num;
     }

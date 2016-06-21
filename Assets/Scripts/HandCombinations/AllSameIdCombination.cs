@@ -19,16 +19,38 @@ public class AllSameIdCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles) {
+    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
         int num = 99;
+        List<int> goodIds = new List<int>();
         for (int i = 0; i < 2; ++i) {
             List<Tile> tilesWithId = tiles.FindAll(t => t.Id == i);
 
             int count = Tile.GetNumberOfTilesToCompleteHand(tilesWithId);
-            if (count < num) {
-                num = count;
+            if (count <= num) {
+                if (count < num) {
+                    goodIds.Clear();
+                    num = count;
+                }
+
+                goodIds.Add(i);
             }
         }
+
+        List<Tile> unnecTiles = new List<Tile>();
+        foreach (Tile tile in tiles) {
+            bool unnec = true;
+            foreach (int id in goodIds) {
+                if (tile.Id == id) {
+                    unnec = false;
+                    break;
+                }
+            }
+
+            if (unnec) {
+                unnecTiles.Add(tile);
+            }
+        }
+        outUnnecessaryTiles = unnecTiles;
 
         return num;
     }

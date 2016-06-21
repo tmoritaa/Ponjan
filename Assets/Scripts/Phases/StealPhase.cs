@@ -48,7 +48,7 @@ public class StealPhase : PhaseNode {
             } else {
                 stealPriorityOrder.Enqueue(player);
             }
-            validCombsPerPlayer[player.Id] = new List<HandCombination>(validCombs);
+            validCombsPerPlayer[player.Id] = validCombs;
         }
 
         while (stealPriorityOrder.Count > 0) {

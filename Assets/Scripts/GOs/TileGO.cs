@@ -4,22 +4,35 @@ using System.Collections;
 
 public class TileGO : MonoBehaviour {
     [SerializeField]
-    Image image;
+    private Image image;
     public Image Image {
         get { return this.image; }
     }
 
     [SerializeField]
-    Text text;
+    private Text text;
+
+    private Vector3 initRotation;
 
     private Tile tile;
     public Tile Tile {
         set { this.tile = value; }
     }
 
+    public void Awake() {
+        this.initRotation = this.transform.localEulerAngles;
+    }
+
     public void UpdateTile() {
         if (this.tile == null) {
             return;
+        }
+
+        if (!this.tile.UsedForReach) {
+            this.transform.localEulerAngles = this.initRotation;
+        } else {
+            UnityEngine.Debug.Log("asdf");
+            this.transform.localEulerAngles = this.initRotation + new Vector3(0, 0, 90);
         }
 
         // If tile is in deck or is controlled by AI, should be hidden.

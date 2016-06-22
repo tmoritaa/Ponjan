@@ -80,20 +80,28 @@ public class Tile {
         set { this.stolenPlayer = value; }
     }
 
-    Zone zone;
+    private Zone zone;
     public Zone Zone {
         get { return this.zone; }
         set { this.zone = value; }
     }
 
+    // UI Variables
     private int deckIdx = 0;
     public int DeckIdx {
         get { return this.deckIdx; }
         set { this.deckIdx = value; }
     }
 
+    private bool usedForReach = false;
+    public bool UsedForReach {
+        get { return this.usedForReach; }
+        set { this.usedForReach = value; }
+    }
+
     public void Reset() {
         this.stolenPlayer = null;
+        this.usedForReach = false;
     }
 
     public bool IsSame(Tile tile) {
@@ -157,7 +165,6 @@ public class Tile {
                 }
             }
         }
-
 
         // Handle prob for singles.
         {

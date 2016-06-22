@@ -23,7 +23,10 @@ public class TileGO : MonoBehaviour {
         }
 
         // If tile is in deck or is controlled by AI, should be hidden.
-        if (this.tile.Zone.Type == DeckZone.ZoneType.Deck/* || this.tile.Owner.ControllerType == Player.PlayerType.AI*/) {
+        if ((!CombatSceneController.Instance.DebugShowDeck && this.tile.Zone.Type == DeckZone.ZoneType.Deck) || 
+            (!CombatSceneController.Instance.DebugShowHands && 
+                this.tile.Zone.Type == Zone.ZoneType.Hand && 
+                this.tile.Owner.ControllerType == Player.PlayerType.AI)) {
             this.image.color = new Color(0.4f, 0.4f, 0.4f);
             this.text.text = "";
             return;

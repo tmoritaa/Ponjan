@@ -4,20 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CombatSceneController : MonoBehaviour {
-    private Queue<UIResponseRequest> responsesToHandle = new Queue<UIResponseRequest>();
-    private UIResponseRequest curHandlingResponse = new UIResponseRequest(UIResponseRequest.ResponseType.None);
-
-    private Queue<UIUpdateRequest> updatesToHandle = new Queue<UIUpdateRequest>();
-
-    private Game game = new Game();
-
-    private static CombatSceneController instance;
-    public static CombatSceneController Instance {
-        get { return CombatSceneController.instance; }
-    }
-
-    public const int SetSize = 3;
-
     [SerializeField]
     public const int MaxPlayerHandSize = 9;
 
@@ -54,7 +40,33 @@ public class CombatSceneController : MonoBehaviour {
     [SerializeField]
     GameResultsScreen gameResultsScreen;
 
+    private Queue<UIResponseRequest> responsesToHandle = new Queue<UIResponseRequest>();
+    private UIResponseRequest curHandlingResponse = new UIResponseRequest(UIResponseRequest.ResponseType.None);
+
+    private Queue<UIUpdateRequest> updatesToHandle = new Queue<UIUpdateRequest>();
+
+    private Game game = new Game();
+
+    private static CombatSceneController instance;
+    public static CombatSceneController Instance {
+        get { return CombatSceneController.instance; }
+    }
+
+    public const int SetSize = 3;
+
     bool gameInProgress = false;
+
+    // Debug variables
+    private bool debugShowHands = false;
+    public bool DebugShowHands {
+        get { return this.debugShowHands; }
+    }
+
+    private bool debugShowDeck = false;
+    public bool DebugShowDeck {
+        get { return this.debugShowDeck; }
+    }
+    
 
 	void Awake() {
         CombatSceneController.instance = this;
@@ -92,6 +104,11 @@ public class CombatSceneController : MonoBehaviour {
         }
     }
 
+    private void UpdateBoard() {
+        this.playerZones.ForEach(z => z.UpdateZones(this.game));
+        this.scoreDisplayGO.UpdateText(this.game.Players, this.game.CurRound);
+    }
+
     private void HandleUIUpdates() {
         while(this.updatesToHandle.Count > 0) {
             UIUpdateRequest request = this.updatesToHandle.Dequeue();
@@ -99,8 +116,7 @@ public class CombatSceneController : MonoBehaviour {
                 case UIUpdateRequest.UpdateType.None:
                     break;
                 case UIUpdateRequest.UpdateType.UpdateBoard:
-                    this.playerZones.ForEach(z => z.UpdateZones(this.game));
-                    this.scoreDisplayGO.UpdateText(this.game.Players, this.game.CurRound);
+                    this.UpdateBoard();
                     break;
                 case UIUpdateRequest.UpdateType.Reset:
                     this.Reset();
@@ -206,6 +222,19 @@ public class CombatSceneController : MonoBehaviour {
         if (handled) {
             this.ResponseHandled();
         }
+    }
+
+    public void DebugButtonPressed(string action) {
+        switch (action) {
+            case "ShowHands":
+                this.debugShowHands = !this.debugShowHands;
+                break;
+            case "ShowDeck":
+                this.debugShowDeck = !this.debugShowDeck;
+                break;
+        }
+
+        this.UpdateBoard();
     }
 
     private void ResponseHandled() {

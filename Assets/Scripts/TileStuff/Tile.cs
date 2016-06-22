@@ -6,14 +6,21 @@ using System.Linq;
 using System.Text;
 
 public class Tile {
-    // TODO: Later make id and type of Tile class use this instead.
-    public class TileProp {
+    public enum TileType {
+        Blue,
+        Yellow,
+        Red,
+        White,
+        Dragon,
+    }
+
+    public struct TileProp {
         public Tile.TileType type;
         public int id;
 
         public TileProp(Tile tile) {
-            this.type = tile.type;
-            this.id = tile.id;
+            this.type = tile.prop.type;
+            this.id = tile.prop.id;
         }
 
         public TileProp(Tile.TileType type, int id) {
@@ -51,21 +58,17 @@ public class Tile {
         }
     }
 
-    public enum TileType {
-        Blue,
-        Yellow,
-        Red,
-        White,
-        Dragon,
-    }
-    private TileType type;
-    public TileType Type {
-        get { return this.type; }
+    TileProp prop;
+    public TileProp Prop {
+        get { return this.prop; }
     }
 
-    private int id;
+    public TileType Type {
+        get { return this.prop.type; }
+    }
+
     public int Id {
-        get { return this.id; }
+        get { return this.prop.id; }
     }
 
     private Player owner;
@@ -109,14 +112,14 @@ public class Tile {
             return false;
         }
 
-        return (this.type == tile.type && this.id == tile.id);
+        return (this.prop.Equals(tile));
     }
 
     public static int CompareTiles(Tile x, Tile y) {
-        if (x.type != y.type) {
-            return (x.type < y.type) ? -1 : 1;
-        } else if (x.id != y.id ){
-            return (x.id < y.id) ? -1 : 1;
+        if (x.prop.type != y.prop.type) {
+            return (x.prop.type < y.prop.type) ? -1 : 1;
+        } else if (x.prop.id != y.prop.id ){
+            return (x.prop.id < y.prop.id) ? -1 : 1;
         }
         return 0;
     }
@@ -324,13 +327,11 @@ public class Tile {
     } 
 
     public Tile(TileType type, int id) {
-        this.type = type;
-        this.id = id;
+        this.prop = new TileProp(type, id);
     }
 
     public Tile(Tile tile) {
-        this.type = tile.type;
-        this.id = tile.id;
+        this.prop = tile.prop;
         this.owner = tile.owner;
         this.stolenPlayer = tile.stolenPlayer;
         this.zone = tile.zone;

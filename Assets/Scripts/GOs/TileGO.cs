@@ -31,7 +31,6 @@ public class TileGO : MonoBehaviour {
         if (!this.tile.UsedForReach) {
             this.transform.localEulerAngles = this.initRotation;
         } else {
-            UnityEngine.Debug.Log("asdf");
             this.transform.localEulerAngles = this.initRotation + new Vector3(0, 0, 90);
         }
 

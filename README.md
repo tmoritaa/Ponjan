@@ -23,8 +23,11 @@ A simplified Mahjong game
 
 ### Scoring
 * When a player completes their hand, a score is calculated based on the hand combinations that the hand accomplishes.
-* If the final tile that completed the hand was drawn, then the other players get a score penalty based on the score of the completed hand.
+* If the final tile that completed the hand was drawn, then the other players get a score penalty based on the score of the completed hand divided by the number of players - 1.
 * If the final tile was stolen, then the player that got stolen gets a score penalty based on the score of the completed hand.
+* The actual score added and subtracted from a player is a bit confusing, but follows the following formula:
+  * If total points of hand is below 4, score is 2^(points-1).
+  * Otherwise, score is 4 * ((points / 2) + 1) + 4.
 
 ### Reaching
 * Reaching is an action that can be performed if the player's hand is one tile away from completion. 

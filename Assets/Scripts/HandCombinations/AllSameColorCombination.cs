@@ -22,52 +22,26 @@ public class AllSameColorCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> _tiles, out List<Tile> outUnnecessaryTiles) {
+    public override float GetProbabilityOfCompletion(List<Tile> _tiles, List<Tile.TileProp> allTileData, Game game, out List<Tile.TileProp> outTilePropsUsed) {
         List<Tile> tiles = new List<Tile>(_tiles);
 
-        List<Tile> redTiles = tiles.FindAll(t => t.Type == Tile.TileType.Red);
-        List<Tile> blueTiles = tiles.FindAll(t => t.Type == Tile.TileType.Blue);
-        List<Tile> yellowTiles = tiles.FindAll(t => t.Type == Tile.TileType.Yellow);
-        List<Tile> whiteTiles = tiles.FindAll(t => t.Type == Tile.TileType.White);
-
-        int redNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(redTiles);
-        int blueNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(blueTiles);
-        int yellowNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(yellowTiles);
-        int whiteNeededTileNum = Tile.GetNumberOfTilesToCompleteHand(whiteTiles);
-
+        float highestProb = 0;
         Tile.TileType[] tileTypes = new Tile.TileType[4] { Tile.TileType.Red, Tile.TileType.Blue, Tile.TileType.Yellow, Tile.TileType.White };
-        int[] neededTilePerNum = new int[4] { redNeededTileNum, blueNeededTileNum, yellowNeededTileNum, whiteNeededTileNum };
 
-        List<Tile.TileType> minTypes = new List<Tile.TileType>();
-        int minCount = 999;
+        List<Tile.TileProp> finalTilePropsUsed = new List<Tile.TileProp>();
         for (int i = 0; i < 4; ++i) {
-            int tileNum = neededTilePerNum[i];
-            if (tileNum <= minCount) {
-                if (tileNum < minCount) {
-                    minTypes.Clear();
-                    minCount = tileNum;
-                }
-                
-                minTypes.Add(tileTypes[i]);
+            Tile.TileType type = tileTypes[i];
+
+            List<Tile.TileProp> tilePropsUsed;
+            float prob = Tile.FindCompleteHandWithHighestProb(tiles.FindAll(t => t.Type == type), allTileData.FindAll(t => t.type == type), game, out tilePropsUsed);
+
+            if (prob >= highestProb) {
+                finalTilePropsUsed = tilePropsUsed;
+                highestProb = prob;
             }
         }
 
-        List<Tile> unnecessaryTiles = new List<Tile>();
-        foreach (Tile tile in tiles) {
-            bool unnecessary = true;
-            foreach (Tile.TileType type in minTypes) {
-                if (tile.Type == type) {
-                    unnecessary = false;
-                    break;
-                }
-            }
-
-            if (unnecessary) {
-                unnecessaryTiles.Add(tile);
-            }
-        }
-        outUnnecessaryTiles = unnecessaryTiles;
-
-        return minCount;
+        outTilePropsUsed = finalTilePropsUsed;
+        return highestProb;
     }
 }

@@ -29,43 +29,24 @@ public class AllSameCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
-        List<Tile> tileTypes = Tile.ReturnTilesWithoutDuplicates(tiles);
+    public override float GetProbabilityOfCompletion(List<Tile> _tiles, List<Tile.TileProp> allTileData, Game game, out List<Tile.TileProp> outTilePropsUsed) {
+        List<Tile> tiles = new List<Tile>(_tiles);
 
-        int num = 0;
-        List<Tile> bestTiles = new List<Tile>();
-        foreach(Tile tile in tileTypes) {
-            if (tile.Type == Tile.TileType.Dragon || tile.Type == Tile.TileType.White) {
-                continue;
-            }
+        float highestProb = 0;
 
-            int count = tiles.FindAll(t => t.IsSame(tile)).Count;
-            if (count >= num) {
-                if (count > num) {
-                    bestTiles.Clear();
-                    num = count;
-                }
+        List<Tile.TileProp> finalTilePropsUsed = new List<Tile.TileProp>();
+        List<Tile> nonDupTiles = Tile.ReturnTilesWithoutDuplicates(tiles);
+        foreach (Tile tile in nonDupTiles) {
+            List<Tile.TileProp> tilePropsUsed;
+            float prob = Tile.FindCompleteHandWithHighestProb(tiles.FindAll(t => t.IsSame(tile)), allTileData.FindAll(t => t.Equals(tile)), game, out tilePropsUsed);
 
-                bestTiles.Add(tile);
+            if (prob > highestProb) {
+                highestProb = prob;
+                finalTilePropsUsed = tilePropsUsed;
             }
         }
 
-        List<Tile> unnecessaryTiles = new List<Tile>();
-        foreach (Tile tile in tiles) {
-            bool unnecessary = true;
-            foreach (Tile bestTile in bestTiles) {
-                if (bestTile.IsSame(tile)) {
-                    unnecessary = false;
-                    break;
-                }
-            }
-
-            if (unnecessary) {
-                unnecessaryTiles.Add(tile);
-            }
-        }
-        outUnnecessaryTiles = unnecessaryTiles;
-
-        return CombatSceneController.MaxPlayerHandSize - num;
+        outTilePropsUsed = finalTilePropsUsed;
+        return highestProb;
     }
 }

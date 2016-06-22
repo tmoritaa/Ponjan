@@ -19,39 +19,23 @@ public class AllSameIdCombination : HandCombination {
         return valid;
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
-        int num = 99;
-        List<int> goodIds = new List<int>();
+    public override float GetProbabilityOfCompletion(List<Tile> _tiles, List<Tile.TileProp> allTileData, Game game, out List<Tile.TileProp> outTilePropsUsed) {
+        List<Tile> tiles = new List<Tile>(_tiles);
+
+        float highestProb = 0;
+
+        List<Tile.TileProp> finalTilePropsUsed = new List<Tile.TileProp>();
         for (int i = 0; i < 2; ++i) {
-            List<Tile> tilesWithId = tiles.FindAll(t => t.Id == i);
+            List<Tile.TileProp> tilePropsUsed;
+            float prob = Tile.FindCompleteHandWithHighestProb(tiles.FindAll(t => t.Id == i), allTileData.FindAll(t => t.id == i), game, out tilePropsUsed);
 
-            int count = Tile.GetNumberOfTilesToCompleteHand(tilesWithId);
-            if (count <= num) {
-                if (count < num) {
-                    goodIds.Clear();
-                    num = count;
-                }
-
-                goodIds.Add(i);
+            if (prob >= highestProb) {
+                finalTilePropsUsed = tilePropsUsed;
+                highestProb = prob;
             }
         }
 
-        List<Tile> unnecTiles = new List<Tile>();
-        foreach (Tile tile in tiles) {
-            bool unnec = true;
-            foreach (int id in goodIds) {
-                if (tile.Id == id) {
-                    unnec = false;
-                    break;
-                }
-            }
-
-            if (unnec) {
-                unnecTiles.Add(tile);
-            }
-        }
-        outUnnecessaryTiles = unnecTiles;
-
-        return num;
+        outTilePropsUsed = finalTilePropsUsed;
+        return highestProb;
     }
 }

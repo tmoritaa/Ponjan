@@ -15,31 +15,73 @@ public class ThreeColorCombination : HandCombination {
             sets.Exists(t => t.Type == Tile.TileType.Yellow));
     }
 
-    public override int ReturnNumTilesToComplete(List<Tile> tiles, out List<Tile> outUnnecessaryTiles) {
-        List<Tile> redDupTiles;
-        List<Tile> blueDupTiles;
-        List<Tile> yellowDupTiles;
-        int redNum = CombatSceneController.SetSize - Math.Min(Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Red, out redDupTiles), CombatSceneController.SetSize);
-        int blueNum = CombatSceneController.SetSize - Math.Min(Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Blue, out blueDupTiles), CombatSceneController.SetSize);
-        int yellowNum = CombatSceneController.SetSize - Math.Min(Tile.GetHighestNumOfSameTilesOfType(tiles, Tile.TileType.Yellow, out yellowDupTiles), CombatSceneController.SetSize);
-
-        List<Tile> unnecessaryTiles = tiles.FindAll(t => t.Type == Tile.TileType.Dragon || t.Type == Tile.TileType.White);
+    public override float GetProbabilityOfCompletion(List<Tile> _tiles, List<Tile.TileProp> allTileData, Game game, out List<Tile.TileProp> outTilePropsUsed) {
+        List<Tile> tiles = new List<Tile>(_tiles);
 
         Tile.TileType[] tileTypes = new Tile.TileType[3] { Tile.TileType.Red, Tile.TileType.Blue, Tile.TileType.Yellow };
-        foreach (Tile.TileType type in tileTypes) {
-            List<Tile> colorTiles = tiles.FindAll(t => t.Type == type);
-            List<Tile> sets = Tile.ReturnGroupedTiles(colorTiles, 3);
+
+        List<Tile.TileProp> usableTiles = new List<Tile.TileProp>();
+        List<Tile> tilesForHand = new List<Tile>();
+        foreach(Tile.TileType tileType in tileTypes) {
+            List<Tile> sets;
+            List<Tile> pairs;
+            List<Tile> singles;
+
+            List<Tile> colorTiles = tiles.FindAll(t => t.Type == tileType);
+            Tile.SeparateIntoSetsPairsSingles(colorTiles, out sets, out pairs, out singles);
 
             if (sets.Count > 0) {
-                for (int i = 0; i < CombatSceneController.SetSize; ++i) {
-                    colorTiles.Remove(colorTiles.Find(t => t.IsSame(sets[0])));
+                for (int i = 0; i < 3; ++i) {
+                    Tile tile = tiles.Find(t => t.IsSame(sets[0]));
+                    tilesForHand.Add(tile);
+                    tiles.Remove(tile);
+                }
+            } else if (pairs.Count > 0) {
+                TileDrawProb bestDrawProb = new TileDrawProb(new Tile.TileProp(pairs[0]), 0);
+                foreach (Tile tile in pairs) {
+                    TileDrawProb drawProb = game.GetProbOfDrawingTile(new Tile.TileProp(tile), 1);
+
+                    if (drawProb.prob > bestDrawProb.prob) {
+                        bestDrawProb = drawProb;
+                    }
                 }
 
-                unnecessaryTiles.AddRange(colorTiles);
+                for (int i = 0; i < 2; ++i) {
+                    Tile tile = tiles.Find(t => bestDrawProb.tileProp.Equals(t));
+                    tilesForHand.Add(tile);
+                    tiles.Remove(tile);
+                }
+            } else if (singles.Count > 0) {
+                TileDrawProb bestDrawProb = new TileDrawProb(new Tile.TileProp(singles[0]), 0);
+                foreach (Tile tile in singles) {
+                    TileDrawProb drawProb = game.GetProbOfDrawingTile(new Tile.TileProp(tile), 2);
+
+                    if (drawProb.prob > bestDrawProb.prob) {
+                        bestDrawProb = drawProb;
+                    }
+                }
+
+                Tile tileToAdd = tiles.Find(t => bestDrawProb.tileProp.Equals(t));
+                tilesForHand.Add(tileToAdd);
+                tiles.Remove(tileToAdd);
+            } else {
+                usableTiles.AddRange(allTileData.FindAll(t => t.type == tileType));
             }
         }
 
-        outUnnecessaryTiles = unnecessaryTiles;
-        return redNum + blueNum + yellowNum;
+        List<Tile.TileProp> tilePropsUsed;
+        float prob = Tile.FindCompleteHandWithHighestProb(tilesForHand, usableTiles, game, out tilePropsUsed);
+
+        // Remove any used tiles that have excess numbers.
+        List<Tile.TileProp> tobeRemoved = new List<Tile.TileProp>();
+        foreach(Tile.TileProp tileProp in tilePropsUsed) {
+            if (_tiles.FindAll(t => tileProp.Equals(t)).Count > CombatSceneController.SetSize) {
+                tobeRemoved.Add(tileProp);
+            }
+        }
+        tobeRemoved.ForEach(tp => tilePropsUsed.Remove(tp));
+
+        outTilePropsUsed = tilePropsUsed;
+        return prob;
     }
 }

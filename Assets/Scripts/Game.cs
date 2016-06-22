@@ -21,6 +21,8 @@ public class Game {
         get { return this.players; }
     }
 
+    private List<TileSetupData.TileSetupEntry> tileSetupEntries;
+
     private Decision decisionWaitingResponse = null;
     private Queue<Decision> decisionsToProcess = new Queue<Decision>();
 
@@ -93,6 +95,28 @@ public class Game {
         return finalScore * multiplier;
     }
 
+    // TODO: later make it based on discarded tiles. For now, let AI cheat and get exact probabilities.
+    public TileDrawProb GetProbOfDrawingTile(Tile.TileProp tileProp, int num) {
+        List<Tile> tiles = this.deck.Tiles.FindAll(t => tileProp.Equals(t));
+
+        float prob = 1;
+        for (int i = 0; i < num; ++i) {
+            prob *= (float)(tiles.Count - i) / (float)(this.deck.Tiles.Count - i);
+        }
+
+        return new TileDrawProb(tileProp, prob);
+    }
+
+    // TODO: Having to construct this list every time is dumb. Just construct it when initialized.
+    public List<Tile.TileProp> GetAllTileProps() {
+        List<Tile.TileProp> props = new List<Tile.TileProp>();
+        foreach (TileSetupData.TileSetupEntry entry in this.tileSetupEntries) {
+            props.Add(new Tile.TileProp(entry.type, entry.id));
+        }
+
+        return props;
+    }
+
     public void EnqueueDecision(Decision decision) {
         this.decisionsToProcess.Enqueue(decision);
     }
@@ -124,7 +148,8 @@ public class Game {
     public void ContinueMainGameLoop() {
         this.mainGameLoop.MoveNext();
 
-        // TODO: this will have to be moved somewhere else, or at least not run for every game instance, since this will break when performing AI.
+        // TODO: this will have to be moved somewhere else, or at least not run for every game instance, since this will break when performing AI
+        //       if AI is modifying game state as a look ahead.
         CombatSceneController.Instance.RequestUpdates(this.uiUpdateRequests);
         CombatSceneController.Instance.RequestResponses(this.uiResponseRequests);
     }
@@ -132,6 +157,7 @@ public class Game {
     public void Initialize(int numRounds, Player.PlayerType[] playerTypes, string[] names, List<TileSetupData.TileSetupEntry> tileSetupEntries) {
         this.numberOfRounds = numRounds;
         this.curRound = 1;
+        this.tileSetupEntries = tileSetupEntries;
 
         for (int i = 0; i < playerTypes.Length; ++i) {
             Player player = new Player(playerTypes[i], i, names[i]);
@@ -175,16 +201,17 @@ public class Game {
         this.handCombinations.Add(new AllSameIdCombination());
         this.handCombinations.Add(new OneColorAndWhitesCombination());
         this.handCombinations.Add(new ThreeColorCombination());
-        this.handCombinations.Add(new TwoIdenticalCombination());
         this.handCombinations.Add(new ReachHandCombination());
         this.handCombinations.Add(new NoStealsCombination());
         this.handCombinations.Add(new CompleteWithDrawCombination());
         this.handCombinations.Add(new IppatsuCombination());
-        foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
-            if (entry.type == Tile.TileType.Dragon) {
-                this.handCombinations.Add(new DragonCombination(entry.id));
-            }
-        }
+        // TODO: Implement the bottom hand combination AIs.
+        //foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
+        //    if (entry.type == Tile.TileType.Dragon) {
+        //        this.handCombinations.Add(new DragonCombination(entry.id));
+        //    }
+        //}
+        //this.handCombinations.Add(new TwoIdenticalCombination());
     }
 
     public void Reset() {

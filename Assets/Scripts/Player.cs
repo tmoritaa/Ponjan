@@ -202,24 +202,51 @@ public class Player {
         this.score += score;
     }
 
-    public Tile AIPickTileToDiscard(List<HandCombination> handCombs) {
-        UnityEngine.Debug.Log("Player " + this.id);
+    public Tile AIPickTileToDiscard(List<HandCombination> handCombs, Game game) {
+        Tile discardTile = null;
 
-        List<Tile> allTiles = new List<Tile>(this.HandZone.Tiles);
-        allTiles.AddRange(this.StealZone.Tiles);
-        allTiles.Sort(Tile.CompareTiles);
+        if (!this.HasReached) {
+            List<Tile> allTiles = new List<Tile>(this.HandZone.Tiles);
+            allTiles.AddRange(this.StealZone.Tiles);
+            allTiles.Sort(Tile.CompareTiles);
 
-        foreach(HandCombination comb in handCombs) {
-            List<Tile> unnecTiles = new List<Tile>();
-            int num = comb.ReturnNumTilesToComplete(allTiles, out unnecTiles);
-            string str = comb.Name + " " + num;
-            foreach(Tile tile in unnecTiles) {
-                str += "\n" + tile.Type + " " + tile.Id;
+            List<HandCombProbs> handCombProbs = new List<HandCombProbs>();
+            foreach (HandCombination handComb in handCombs) {
+                List<Tile.TileProp> tileProp;
+                float prob = handComb.GetProbabilityOfCompletion(allTiles, game.GetAllTileProps(), game, out tileProp);
+
+                HandCombProbs combProb = new HandCombProbs(handComb, tileProp, prob);
+                handCombProbs.Add(combProb);
             }
-            UnityEngine.Debug.Log(str);
+
+            handCombProbs.Sort(HandCombProbs.SortFunc);
+
+            while (handCombProbs.Count > 0 && discardTile == null) {
+                HashSet<Tile.TileProp> tilePropSet = new HashSet<Tile.TileProp>();
+                foreach (HandCombProbs combProb in handCombProbs) {
+                    foreach (Tile.TileProp prop in combProb.necessaryTiles) {
+                        tilePropSet.Add(prop);
+                    }
+                }
+
+                foreach (Tile tile in this.handZone.Tiles) {
+                    if (!tilePropSet.Contains(new Tile.TileProp(tile))) {
+                        discardTile = tile;
+                        break;
+                    }
+                }
+
+                if (discardTile == null) {
+                    handCombProbs.RemoveAt(handCombProbs.Count - 1);
+                }
+            }
         }
 
-        return this.HandZone.Tiles.Last();
+        if (discardTile == null) {
+            discardTile = this.handZone.Tiles.Last();
+        }
+        
+        return discardTile;
     }
 
     public void Reset(Game game) {

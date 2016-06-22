@@ -26,5 +26,5 @@ public abstract class HandCombination {
 
     public abstract bool HandHasCombination(List<Tile> tiles, CompletionType compType);
 
-    public abstract int ReturnNumTilesToComplete(List<Tile> _tiles, out List<Tile> unnecessaryTiles);
+    public abstract float GetProbabilityOfCompletion(List<Tile> _tiles, List<Tile.TileProp> allTileData, Game game, out List<Tile.TileProp> outTilePropsUsed);
 }

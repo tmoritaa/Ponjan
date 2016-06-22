@@ -22,6 +22,10 @@ public class Game {
     }
 
     private List<TileSetupData.TileSetupEntry> tileSetupEntries;
+    private List<Tile.TileProp> tilesInGame = new List<Tile.TileProp>();
+    public List<Tile.TileProp> TilesInGame {
+        get { return this.tilesInGame; }
+    }
 
     private Decision decisionWaitingResponse = null;
     private Queue<Decision> decisionsToProcess = new Queue<Decision>();
@@ -107,16 +111,6 @@ public class Game {
         return new TileDrawProb(tileProp, prob);
     }
 
-    // TODO: Having to construct this list every time is dumb. Just construct it when initialized.
-    public List<Tile.TileProp> GetAllTileProps() {
-        List<Tile.TileProp> props = new List<Tile.TileProp>();
-        foreach (TileSetupData.TileSetupEntry entry in this.tileSetupEntries) {
-            props.Add(new Tile.TileProp(entry.type, entry.id));
-        }
-
-        return props;
-    }
-
     public void EnqueueDecision(Decision decision) {
         this.decisionsToProcess.Enqueue(decision);
     }
@@ -157,7 +151,11 @@ public class Game {
     public void Initialize(int numRounds, Player.PlayerType[] playerTypes, string[] names, List<TileSetupData.TileSetupEntry> tileSetupEntries) {
         this.numberOfRounds = numRounds;
         this.curRound = 1;
+
         this.tileSetupEntries = tileSetupEntries;
+        foreach (TileSetupData.TileSetupEntry entry in this.tileSetupEntries) {
+            this.tilesInGame.Add(new Tile.TileProp(entry.type, entry.id));
+        }
 
         for (int i = 0; i < playerTypes.Length; ++i) {
             Player player = new Player(playerTypes[i], i, names[i]);

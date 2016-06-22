@@ -213,7 +213,7 @@ public class Player {
             List<HandCombProbs> handCombProbs = new List<HandCombProbs>();
             foreach (HandCombination handComb in handCombs) {
                 List<Tile.TileProp> tileProp;
-                float prob = handComb.GetProbabilityOfCompletion(allTiles, game.GetAllTileProps(), game, out tileProp);
+                float prob = handComb.GetProbabilityOfCompletion(allTiles, game.TilesInGame, game, out tileProp);
 
                 HandCombProbs combProb = new HandCombProbs(handComb, tileProp, prob);
                 handCombProbs.Add(combProb);

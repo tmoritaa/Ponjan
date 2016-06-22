@@ -80,3 +80,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 out
+
+PonjanExe/

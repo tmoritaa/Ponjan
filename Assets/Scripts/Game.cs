@@ -204,12 +204,12 @@ public class Game {
         this.handCombinations.Add(new CompleteWithDrawCombination());
         this.handCombinations.Add(new IppatsuCombination());
         // TODO: Implement the bottom hand combination AIs.
-        //foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
-        //    if (entry.type == Tile.TileType.Dragon) {
-        //        this.handCombinations.Add(new DragonCombination(entry.id));
-        //    }
-        //}
-        //this.handCombinations.Add(new TwoIdenticalCombination());
+        foreach (TileSetupData.TileSetupEntry entry in tileSetupEntries) {
+            if (entry.type == Tile.TileType.Dragon) {
+                this.handCombinations.Add(new DragonCombination(entry.id));
+            }
+        }
+        this.handCombinations.Add(new TwoIdenticalCombination());
     }
 
     public void Reset() {

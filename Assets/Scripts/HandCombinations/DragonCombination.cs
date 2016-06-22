@@ -20,7 +20,9 @@ public class DragonCombination : HandCombination {
         return valid;
     }
 
+    // TODO: implement
     public override float GetProbabilityOfCompletion(List<Tile> _tiles, List<Tile.TileProp> allTileData, Game game, out List<Tile.TileProp> outTilePropsUsed) {
-        throw new NotImplementedException();
+        outTilePropsUsed = new List<Tile.TileProp>();
+        return 0;
     }
 }

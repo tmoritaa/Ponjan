@@ -53,7 +53,7 @@ A simplified Mahjong game
 ### Dragon (1 point) [AI not yet implemented]
 * The hand has a set of dragon tiles
 
-### Two Identical (1 point)
+### Two Identical (1 point) [AI not yet implemented]
 * There are two sets in hand that are comprised of the same tile.
 
 ### No Steals (1 point)

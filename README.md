@@ -1,6 +1,10 @@
 # Ponjan
 A simplified Mahjong game
 
+## Controls
+* Click on tiles in your hand to discard them on your turn.
+* You can steal tiles and complete hands by pressing the button on the bottom right when they come up.
+
 ## Tile Types and Number
 * 18 Red tiles: 9 Red0, 9 Red1
 * 18 Blue tiles: 9 Blue0, 9 Blue1
